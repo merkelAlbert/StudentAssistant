@@ -4,7 +4,7 @@
     <style name="ItemContainerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">90dp</item>
-        <item name="android:alpha">0.6</item>
+        <item name="android:alpha">0.5</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
         <item name="android:visibility">visible</item>
@@ -16,9 +16,12 @@
     <style name="ItemTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blackText</item>
+    </style>
+
+    <style name="ItemSubjectStyle" parent="ItemTextStyle">
         <item name="layout_constraintStart_toStartOf">parent</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
-        <item name="android:textColor">@color/blackText</item>
     </style>
 
 </resources>

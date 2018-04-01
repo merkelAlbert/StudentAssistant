@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/textView"
-            style="@style/ItemTextStyle"
+            style="@style/ItemSubjectStyle"
             android:text="Методы маш обучения" />
 
         <TextView
@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/textView3"
-            style="@style/ItemTextStyle"
+            style="@style/ItemSubjectStyle"
             android:text="Методы маш обучения" />
 
         <TextView
@@ -85,7 +85,7 @@
 
         <TextView
             android:id="@+id/textView5"
-            style="@style/ItemTextStyle"
+            style="@style/ItemSubjectStyle"
             android:text="Моделирование" />
 
         <TextView
