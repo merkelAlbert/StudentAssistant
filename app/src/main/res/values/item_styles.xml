@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <resources>
 
     <style name="ItemContainerStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">90dp</item>
-        <item name="android:alpha">0.5</item>
+        <item name="android:layout_height">110dp</item>
+        <item name="android:alpha">0.7</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
         <item name="android:visibility">visible</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:background">@drawable/item_border</item>
     </style>
 
     <style name="ItemTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/blackText</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="ItemSubjectStyle" parent="ItemTextStyle">
