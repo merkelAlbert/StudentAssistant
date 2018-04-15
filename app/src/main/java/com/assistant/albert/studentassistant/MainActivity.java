@@ -1,7 +1,9 @@
 package com.assistant.albert.studentassistant;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -41,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        root = findViewById(R.id.root);
-        ConstraintLayout homework = (ConstraintLayout) getLayoutInflater().inflate(R.layout.homework, root, false);
-        root.addView(homework);
-        HomeWorkItem.onSelected(MainActivity.this);
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigation_home);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if (root == null) {
+            root = findViewById(R.id.root);
+            ConstraintLayout homework = (ConstraintLayout) getLayoutInflater().inflate(R.layout.homework, root, false);
+            root.addView(homework);
+            HomeWorkItem.onSelected(MainActivity.this);
+            BottomNavigationView navigation = findViewById(R.id.navigation);
+            navigation.setSelectedItemId(R.id.navigation_home);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        }
     }
 
 }

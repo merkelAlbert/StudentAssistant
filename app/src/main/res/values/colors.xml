@@ -8,4 +8,5 @@
     <color name="yellowItem">#ffca28</color>
     <color name="blackText">#000000</color>
     <color name="selectedItem">#de304ffe</color>
+    <color name="white">#FFFFFF</color>
 </resources>

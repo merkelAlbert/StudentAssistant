@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
-
     <style name="ItemContainerStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">110dp</item>
+        <item name="android:layout_height">100dp</item>
         <item name="android:alpha">0.7</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
-        <item name="android:visibility">visible</item>
-        <item name="android:layout_marginBottom">4dp</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:background">@drawable/item_border</item>
     </style>
 
     <style name="ItemTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/blackText</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="ItemSubjectStyle" parent="ItemTextStyle">
         <item name="layout_constraintStart_toStartOf">parent</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
+    </style>
+
+    <style name="ItemCheckBoxStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="android:scaleX">1.5</item>
+        <item name="android:scaleY">1.5</item>
+    </style>
+
+    <style name="ItemCardStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <item name="android:layout_marginRight">3dp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 
 </resources>

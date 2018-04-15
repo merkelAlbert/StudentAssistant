@@ -5,11 +5,35 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
 
 public class HomeWorkItem {
-    public static void onSelected(Activity activity) {
+    public static void onSelected(final Activity activity) {
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
+        String url = "http://192.168.0.104:8888?name=arturo";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(activity.getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity.getApplicationContext(), "That didn't work!", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        queue.add(stringRequest);
+
         ConstraintLayout item1 = activity.findViewById(R.id.constraintLayout);
         ConstraintLayout item2 = activity.findViewById(R.id.constraintLayout2);
         ConstraintLayout item3 = activity.findViewById(R.id.constraintLayout3);
@@ -28,11 +52,11 @@ public class HomeWorkItem {
                 ((ColorDrawable) item3.getBackground()).getColor());
     }
 
-    public static void handleClick(final Activity activity, final CheckBox checkBox, final ConstraintLayout constraintLayout, final int currentColor) {
+    private static void handleClick(final Activity activity, final CheckBox checkBox, final ConstraintLayout constraintLayout, final int currentColor) {
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((CheckBox) checkBox).isChecked()) {
+                if (checkBox.isChecked()) {
                     constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.selectedItem));
                 } else {
                     constraintLayout.setBackgroundColor(currentColor);
