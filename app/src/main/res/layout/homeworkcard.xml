@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeworkCard"
+    style="@style/ItemCardStyle">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/homeworkConstraintLayout"
+        style="@style/ItemContainerStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/subject"
+            style="@style/ItemSubjectStyle" />
+
+        <TextView
+            android:id="@+id/exercise"
+            style="@style/ItemTextStyle"
+            app:layout_constraintStart_toStartOf="@id/subject"
+            app:layout_constraintTop_toBottomOf="@id/subject" />
+
+        <!--<CheckBox-->
+        <!--android:id="@+id/checkBox"-->
+        <!--style="@style/ItemCheckBoxStyle" />-->
+
+        <TextView
+            android:id="@+id/time"
+            style="@style/ItemTextStyle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

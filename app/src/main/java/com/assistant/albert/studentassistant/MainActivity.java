@@ -1,58 +1,50 @@
 package com.assistant.albert.studentassistant;
 
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
-import com.assistant.albert.studentassistant.studentassistant.homework.HomeWorkItem;
+import com.assistant.albert.studentassistant.studentassistant.homework.HomeworkFragment;
 
-public class MainActivity extends AppCompatActivity {
-
-    private ConstraintLayout root;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    if (!item.isChecked()) {
-                        ConstraintLayout homework = (ConstraintLayout) getLayoutInflater().inflate(R.layout.homework, root, false);
-                        root.addView(homework);
-                        HomeWorkItem.onSelected(MainActivity.this);
-                    }
-                    return true;
-                case R.id.navigation_dashboard:
-                    if (!item.isChecked()) {
-                        root.removeViewInLayout(findViewById(R.id.homework));
-                    }
-                    return true;
-            }
-            return false;
-        }
-    };
+public class MainActivity extends AppCompatActivity
+        implements HomeworkFragment.OnFragmentInteractionListener,
+        ScheduleFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        if (root == null) {
-            root = findViewById(R.id.root);
-            ConstraintLayout homework = (ConstraintLayout) getLayoutInflater().inflate(R.layout.homework, root, false);
-            root.addView(homework);
-            HomeWorkItem.onSelected(MainActivity.this);
-            BottomNavigationView navigation = findViewById(R.id.navigation);
-            navigation.setSelectedItemId(R.id.navigation_home);
-            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        }
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = findViewById(R.id.pager);
+        final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
