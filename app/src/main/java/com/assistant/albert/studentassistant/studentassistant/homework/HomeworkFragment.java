@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ public class HomeworkFragment extends Fragment {
             return Integer.compare(homeworkResponse.Time(), t1.Time());
         }
     };
-    private final ArrayList<HomeworkResponse> arrayList = new ArrayList<>();
+    private ArrayList<HomeworkResponse> arrayList = new ArrayList<>();
     private View view;
 
     public void setDataFromServer(String url) {
@@ -50,6 +51,7 @@ public class HomeworkFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(JSONArray response) {
+                        arrayList = new ArrayList<>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
@@ -62,7 +64,7 @@ public class HomeworkFragment extends Fragment {
 
                         }
                         Collections.sort(arrayList, new HomeworkComparator());
-                        RecyclerView.Adapter adapter = new HomeworkAdapter(arrayList);
+                        RecyclerView.Adapter adapter = new HomeworkRecyclerAdapter(arrayList);
                         recyclerView.setAdapter(adapter);
                     }
                 },
@@ -80,8 +82,28 @@ public class HomeworkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_homework, container, false);
+
+        final SwipeRefreshLayout homeworkSwipeRefreshLayout = view.findViewById(R.id.homeworkContainer);
+        homeworkSwipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
+
+        homeworkSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                homeworkSwipeRefreshLayout.setRefreshing(true);
+                setDataFromServer("http://192.168.1.70:8888/Homework");
+
+                homeworkSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        homeworkSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+                });
+            }
+        });
+
         if (arrayList.isEmpty()) {
-            this.setDataFromServer("http://192.168.1.5:8888/Homework");
+            this.setDataFromServer("http://192.168.1.70:8888/Homework");
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Уже есть", Toast.LENGTH_LONG).show();
         }

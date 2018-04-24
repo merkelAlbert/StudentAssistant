@@ -6,8 +6,8 @@
     style="@style/ItemCardStyle">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/homeworkConstraintLayout"
         style="@style/ItemContainerStyle"
+        android:background="@drawable/card_border"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,8 +27,8 @@
 
         <TextView
             android:id="@+id/time"
-            style="@style/ItemTextStyle"
-            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/ItemTimeStyle"
+            android:background="@drawable/card_time_circle"
             app:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
