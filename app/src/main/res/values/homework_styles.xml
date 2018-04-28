@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ItemContainerStyle">
+
+    <style name="HomeworkContainerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">90dp</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">15dp</item>
     </style>
 
-    <style name="ItemTextStyle">
+    <style name="CardTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">19sp</item>
     </style>
 
-    <style name="ItemSubjectStyle" parent="ItemTextStyle">
+    <style name="CardSubjectStyle" parent="CardTextStyle">
         <item name="layout_constraintStart_toStartOf">parent</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
-        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ItemTimeStyle">
+    <style name="CardTimeStyle">
         <item name="android:layout_width">35dp</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:background">@drawable/card_time_circle</item>
@@ -31,9 +31,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ItemCardStyle">
+    <style name="CardStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
     </style>
 
 </resources>

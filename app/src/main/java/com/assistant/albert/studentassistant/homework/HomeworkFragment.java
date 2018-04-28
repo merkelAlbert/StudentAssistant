@@ -1,4 +1,4 @@
-package com.assistant.albert.studentassistant.studentassistant.homework;
+package com.assistant.albert.studentassistant.homework;
 
 import android.net.Uri;
 import android.os.Build;
@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
+import com.assistant.albert.studentassistant.Urls;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +48,7 @@ public class HomeworkFragment extends Fragment {
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
@@ -90,7 +92,7 @@ public class HomeworkFragment extends Fragment {
             @Override
             public void onRefresh() {
                 homeworkSwipeRefreshLayout.setRefreshing(true);
-                setDataFromServer("http://192.168.1.70:8888/Homework");
+                setDataFromServer(Urls.homework);
 
                 homeworkSwipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -103,7 +105,7 @@ public class HomeworkFragment extends Fragment {
         });
 
         if (arrayList.isEmpty()) {
-            this.setDataFromServer("http://192.168.1.70:8888/Homework");
+            this.setDataFromServer(Urls.homework);
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Уже есть", Toast.LENGTH_LONG).show();
         }

@@ -6,8 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.assistant.albert.studentassistant.homework.HomeworkFragment;
 import com.assistant.albert.studentassistant.schedule.ScheduleFragment;
-import com.assistant.albert.studentassistant.studentassistant.homework.HomeworkFragment;
 
 public class MainActivity extends AppCompatActivity
         implements HomeworkFragment.OnFragmentInteractionListener,

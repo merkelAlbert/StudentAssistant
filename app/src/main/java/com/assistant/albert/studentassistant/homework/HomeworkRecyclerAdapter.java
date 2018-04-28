@@ -1,4 +1,4 @@
-package com.assistant.albert.studentassistant.studentassistant.homework;
+package com.assistant.albert.studentassistant.homework;
 
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecyclerAdapter.ViewHolder> {
 
     private final boolean[] firstCardSelected = {false};
+    int selectedCounter;
     private ArrayList<HomeworkResponse> dataSet;
     private View view;
-    int selectedCounter;
 
     public HomeworkRecyclerAdapter(ArrayList<HomeworkResponse> dataSet) {
         this.dataSet = dataSet;

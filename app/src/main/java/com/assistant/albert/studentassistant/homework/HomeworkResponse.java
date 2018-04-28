@@ -1,4 +1,4 @@
-package com.assistant.albert.studentassistant.studentassistant.homework;
+package com.assistant.albert.studentassistant.homework;
 
 public class HomeworkResponse {
     private String subject;

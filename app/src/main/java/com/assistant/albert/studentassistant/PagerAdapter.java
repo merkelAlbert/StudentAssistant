@@ -4,8 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.assistant.albert.studentassistant.homework.HomeworkFragment;
+import com.assistant.albert.studentassistant.instantinfo.InstantInfoFragment;
 import com.assistant.albert.studentassistant.schedule.ScheduleFragment;
-import com.assistant.albert.studentassistant.studentassistant.homework.HomeworkFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -23,6 +24,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return new HomeworkFragment();
             case 1:
                 return new ScheduleFragment();
+            case 2:
+                return new InstantInfoFragment();
             default:
                 return null;
         }
