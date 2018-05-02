@@ -32,11 +32,7 @@ public class ScheduleResponse {
     private ArrayList<ArrayList<ArrayList<String>>> schedule;
 
     public ScheduleResponse() {
-        schedule = new ArrayList<>();
-    }
-
-    public ScheduleResponse(ArrayList<ArrayList<ArrayList<String>>> schedule) {
-        this.schedule = schedule;
+        this.schedule = new ArrayList<>();
     }
 
     public ArrayList<ArrayList<ArrayList<String>>> Schedule() {

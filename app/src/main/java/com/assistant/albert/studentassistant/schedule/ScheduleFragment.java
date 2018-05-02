@@ -42,9 +42,8 @@ public class ScheduleFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        scheduleResponse = new ScheduleResponse();
                         try {
-                            scheduleResponse = new ScheduleResponse();
                             JSONArray schedule = response.getJSONArray("schedule");
                             for (int i = 0; i < schedule.length(); i++) {
                                 DaySchedule daySchedule = new DaySchedule();
@@ -59,11 +58,12 @@ public class ScheduleFragment extends Fragment {
                                 }
                                 scheduleResponse.Schedule().add(daySchedule.getDaySchedule());
                             }
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    scheduleResponse.Schedule().get(1).get(1).get(1).toString(), Toast.LENGTH_SHORT).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        RecyclerView.Adapter adapter = new ScheduleRecyclerAdapter(scheduleResponse);
+                        recyclerView.setAdapter(adapter);
                     }
                 },
                 new Response.ErrorListener() {
@@ -81,13 +81,14 @@ public class ScheduleFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        final SwipeRefreshLayout scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleContainer);
+        final SwipeRefreshLayout scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleOfDay);
         scheduleSwipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
 
         scheduleSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 scheduleSwipeRefreshLayout.setRefreshing(true);
+                scheduleResponse.Schedule().clear();
                 setDataFromServer(Urls.schedule);
 
                 scheduleSwipeRefreshLayout.post(new Runnable() {
