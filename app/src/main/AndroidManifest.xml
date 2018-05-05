@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+
+            android:name=".homework.NewHomeworkActivity"
+            android:label="@string/title_activity_new_homework"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

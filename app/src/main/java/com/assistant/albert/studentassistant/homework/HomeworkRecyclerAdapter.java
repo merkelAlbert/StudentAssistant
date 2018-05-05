@@ -3,6 +3,7 @@ package com.assistant.albert.studentassistant.homework;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,10 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
 
     private final boolean[] firstCardSelected = {false};
     int selectedCounter;
-    private ArrayList<HomeworkResponse> dataSet;
+    private ArrayList<HomeworkItem> dataSet;
     private View view;
 
-    public HomeworkRecyclerAdapter(ArrayList<HomeworkResponse> dataSet) {
+    public HomeworkRecyclerAdapter(ArrayList<HomeworkItem> dataSet) {
         this.dataSet = dataSet;
         this.selectedCounter = 0;
     }
@@ -33,6 +34,8 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                     holder.selected = true;
                     selectedCounter++;
                     firstCardSelected[0] = true;
+                } else if (holder.selected) {
+                    holder.cardView.showContextMenu();
                 }
                 return true;
             }
@@ -51,8 +54,21 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                             selectedCounter--;
                             holder.cardView.setCardBackgroundColor(color);
                         }
+                    } else {
+                        firstCardSelected[0] = false;
                     }
+                } else {
+                    holder.cardView.showContextMenu();
                 }
+            }
+        });
+        holder.cardView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                menu.setHeaderTitle("Домашнее задание");
+                menu.add(0, view.getId(), 0, "Изменить");//groupId, itemId, order, title
+                menu.add(0, view.getId(), 0, "Сдано");
+                menu.add(0, view.getId(), 0, "Удалить");
             }
         });
 //        if (selectedCounter > 0) {
@@ -92,6 +108,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.selected = false;
         setColor(view, holder, Integer.parseInt(holder.time.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor());
+
     }
 
     @Override

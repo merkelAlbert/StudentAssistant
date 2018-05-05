@@ -11,7 +11,9 @@
         android:layout_margin="0dp"
         android:textColor="@color/grey" />
 
-    <android.support.v7.widget.CardView style="@style/CardStyle">
+    <android.support.v7.widget.CardView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
         <LinearLayout
             android:id="@+id/scheduleOfDay"

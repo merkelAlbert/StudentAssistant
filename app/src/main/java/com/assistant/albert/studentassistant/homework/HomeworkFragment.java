@@ -1,9 +1,11 @@
 package com.assistant.albert.studentassistant.homework;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,21 +34,24 @@ import java.util.Comparator;
 
 public class HomeworkFragment extends Fragment {
 
-    public static Comparator<HomeworkResponse> TimeComparator = new Comparator<HomeworkResponse>() {
+    public static Comparator<HomeworkItem> TimeComparator = new Comparator<HomeworkItem>() {
         @Override
-        public int compare(HomeworkResponse homeworkResponse, HomeworkResponse t1) {
-            return Integer.compare(homeworkResponse.Time(), t1.Time());
+        public int compare(HomeworkItem homeworkItem, HomeworkItem t1) {
+            return Integer.compare(homeworkItem.Time(), t1.Time());
         }
     };
-    private ArrayList<HomeworkResponse> arrayList = new ArrayList<>();
+    private ArrayList<HomeworkItem> arrayList = new ArrayList<>();
     private View view;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton floatingActionButton;
 
     public void setDataFromServer(String url) {
-        final RecyclerView recyclerView = view.findViewById(R.id.homeworkRecycler);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-
+        registerForContextMenu(recyclerView);
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
@@ -57,7 +62,7 @@ public class HomeworkFragment extends Fragment {
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                arrayList.add(new HomeworkResponse(jsonObject.getString("subject"),
+                                arrayList.add(new HomeworkItem(jsonObject.getString("subject"),
                                         jsonObject.getString("exercise"),
                                         jsonObject.getInt("time")));
                             } catch (JSONException e) {
@@ -84,20 +89,43 @@ public class HomeworkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_homework, container, false);
+        recyclerView = view.findViewById(R.id.homeworkRecycler);
+        swipeRefreshLayout = view.findViewById(R.id.homeworkContainer);
+        floatingActionButton = view.findViewById(R.id.homeworkFAB);
 
-        final SwipeRefreshLayout homeworkSwipeRefreshLayout = view.findViewById(R.id.homeworkContainer);
-        homeworkSwipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && floatingActionButton.getVisibility() == View.VISIBLE) {
+                    floatingActionButton.hide();
+                } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
+                    floatingActionButton.show();
+                }
+            }
+        });
 
-        homeworkSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newHomework = new Intent(getActivity(), NewHomeworkActivity.class);
+                getActivity().startActivity(newHomework);
+
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                homeworkSwipeRefreshLayout.setRefreshing(true);
+                swipeRefreshLayout.setRefreshing(true);
                 setDataFromServer(Urls.homework);
 
-                homeworkSwipeRefreshLayout.post(new Runnable() {
+                swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
-                        homeworkSwipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setRefreshing(false);
 
                     }
                 });
