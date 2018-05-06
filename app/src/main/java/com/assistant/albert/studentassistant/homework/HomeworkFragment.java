@@ -13,7 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +46,8 @@ public class HomeworkFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton floatingActionButton;
+    private ProgressBar spinner;
+    private Button reloadButton;
 
     public void setDataFromServer(String url) {
 
@@ -58,11 +61,14 @@ public class HomeworkFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(JSONArray response) {
+                        spinner.setVisibility(View.GONE);
                         arrayList = new ArrayList<>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                arrayList.add(new HomeworkItem(jsonObject.getString("subject"),
+                                arrayList.add(new HomeworkItem(
+                                        jsonObject.getString("id"),
+                                        jsonObject.getString("subject"),
                                         jsonObject.getString("exercise"),
                                         jsonObject.getInt("time")));
                             } catch (JSONException e) {
@@ -78,7 +84,17 @@ public class HomeworkFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Server is not responding", Toast.LENGTH_LONG).show();
+                        spinner.setVisibility(View.GONE);
+
+                        reloadButton.setVisibility(View.VISIBLE);
+                        reloadButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                reloadButton.setVisibility(View.GONE);
+                                spinner.setVisibility(View.VISIBLE);
+                                setDataFromServer(Urls.homework);
+                            }
+                        });
                     }
                 }
         );
@@ -92,6 +108,11 @@ public class HomeworkFragment extends Fragment {
         recyclerView = view.findViewById(R.id.homeworkRecycler);
         swipeRefreshLayout = view.findViewById(R.id.homeworkContainer);
         floatingActionButton = view.findViewById(R.id.homeworkFAB);
+        spinner = view.findViewById(R.id.progressBar);
+        reloadButton = view.findViewById(R.id.reloadButton);
+
+        reloadButton.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -109,6 +130,7 @@ public class HomeworkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent newHomework = new Intent(getActivity(), NewHomeworkActivity.class);
+                newHomework.putExtra("editing","false");
                 getActivity().startActivity(newHomework);
 
             }
@@ -120,13 +142,13 @@ public class HomeworkFragment extends Fragment {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
+                arrayList.clear();
                 setDataFromServer(Urls.homework);
 
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-
                     }
                 });
             }
@@ -134,8 +156,6 @@ public class HomeworkFragment extends Fragment {
 
         if (arrayList.isEmpty()) {
             this.setDataFromServer(Urls.homework);
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Уже есть", Toast.LENGTH_LONG).show();
         }
         return view;
     }
@@ -144,5 +164,6 @@ public class HomeworkFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 
 }

@@ -1,7 +1,6 @@
 package com.assistant.albert.studentassistant.homework;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +18,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
@@ -33,22 +31,43 @@ import java.util.Map;
 public class NewHomeworkActivity extends Activity {
 
 
+    boolean isEditing;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_homework);
+        setContentView(R.layout.activity_add_edit_homework);
+
+        final EditText addSubject = findViewById(R.id.addSubject);
+        final EditText addExercise = findViewById(R.id.addExercise);
+        final EditText addWeek = findViewById(R.id.addWeek);
+        isEditing = getIntent().getStringExtra("editing").equals("true");
+        String tempId = "";
+        if (isEditing) {
+            tempId = getIntent().getStringExtra("id");
+            String subject = getIntent().getStringExtra("subject");
+            String exercise = getIntent().getStringExtra("exercise");
+            String week = getIntent().getStringExtra("week");
+
+            addSubject.setText(subject);
+            addExercise.setText(exercise);
+            addWeek.setText(week);
+        }
+
+        final String id = tempId;
 
         final Button submitButton = findViewById(R.id.submitHomework);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText addSubject = findViewById(R.id.addSubject);
-                EditText addExercise = findViewById(R.id.addExercise);
-                EditText addWeek = findViewById(R.id.addWeek);
                 if (isWeekValid(addWeek.getText().toString())) {
-                    HomeworkItem homeworkItem = new HomeworkItem(addSubject.getText().toString(),
+                    HomeworkItem homeworkItem = new HomeworkItem(id, addSubject.getText().toString(),
                             addExercise.getText().toString(), Integer.parseInt(addWeek.getText().toString()));
-                    SendDataToServer(Urls.addHomework, homeworkItem);
+                    if (isEditing) {
+                        SendDataToServer(Urls.changeHomework, homeworkItem);
+                    } else {
+                        SendDataToServer(Urls.addHomework, homeworkItem);
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "Заполните правильно все поля.", Toast.LENGTH_LONG).show();
                 }
@@ -61,6 +80,9 @@ public class NewHomeworkActivity extends Activity {
 
         JSONObject jsonObject = new JSONObject();
         try {
+            if (isEditing) {
+                jsonObject.put("id", homeworkItem.Id());
+            }
             jsonObject.put("subject", homeworkItem.Subject());
             jsonObject.put("exercise", homeworkItem.Exercise());
             jsonObject.put("time", Integer.toString(homeworkItem.Time()));

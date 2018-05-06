@@ -20,6 +20,9 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <include layout="@layout/progress_bar"/>
+    <include layout="@layout/reload_button"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/homeworkFAB"
         android:layout_width="60dp"

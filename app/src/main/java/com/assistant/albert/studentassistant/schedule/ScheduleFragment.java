@@ -9,7 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,10 +30,12 @@ public class ScheduleFragment extends Fragment {
 
     private ScheduleResponse scheduleResponse;
     private View view;
-
+    private ProgressBar spinner;
+    private SwipeRefreshLayout scheduleSwipeRefreshLayout;
+    private Button reloadButton;
+    private RecyclerView recyclerView;
 
     public void setDataFromServer(String url) {
-        final RecyclerView recyclerView = view.findViewById(R.id.scheduleRecycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
@@ -42,6 +45,7 @@ public class ScheduleFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        spinner.setVisibility(View.GONE);
                         scheduleResponse = new ScheduleResponse();
                         try {
                             JSONArray schedule = response.getJSONArray("schedule");
@@ -49,12 +53,12 @@ public class ScheduleFragment extends Fragment {
                                 DaySchedule daySchedule = new DaySchedule();
                                 JSONArray dayJsonArray = schedule.getJSONArray(i);
                                 for (int j = 0; j < dayJsonArray.length(); j++) {
-                                    ClassChedule classChedule = new ClassChedule();
+                                    ClassSchedule classSchedule = new ClassSchedule();
                                     JSONArray classJsonArray = dayJsonArray.getJSONArray(j);
                                     for (int k = 0; k < classJsonArray.length(); k++) {
-                                        classChedule.getClassSchedule().add(classJsonArray.getString(k));
+                                        classSchedule.getClassSchedule().add(classJsonArray.getString(k));
                                     }
-                                    daySchedule.getDaySchedule().add(classChedule.getClassSchedule());
+                                    daySchedule.getDaySchedule().add(classSchedule.getClassSchedule());
                                 }
                                 scheduleResponse.Schedule().add(daySchedule.getDaySchedule());
                             }
@@ -69,19 +73,37 @@ public class ScheduleFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Server is not responding", Toast.LENGTH_LONG).show();
+                        spinner.setVisibility(View.GONE);
+
+                        reloadButton.setVisibility(View.VISIBLE);
+                        reloadButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                reloadButton.setVisibility(View.GONE);
+                                spinner.setVisibility(View.VISIBLE);
+                                setDataFromServer(Urls.schedule);
+                            }
+                        });
                     }
                 }
         );
         queue.add(jsonObjectRequest);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        final SwipeRefreshLayout scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleOfDay);
+        recyclerView = view.findViewById(R.id.scheduleRecycler);
+        spinner = view.findViewById(R.id.progressBar);
+        reloadButton = view.findViewById(R.id.reloadButton);
+        scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleOfDay);
+
+        reloadButton.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+
         scheduleSwipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
 
         scheduleSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -102,8 +124,6 @@ public class ScheduleFragment extends Fragment {
         });
         if (scheduleResponse == null) {
             this.setDataFromServer(Urls.schedule);
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Уже есть", Toast.LENGTH_LONG).show();
         }
         return view;
     }

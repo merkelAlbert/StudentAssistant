@@ -5,4 +5,5 @@ public class Urls {
     public static String homework = root + "homework/";
     public static String schedule = root + "schedule/";
     public static String addHomework = root + "addhomework/";
+    public static String changeHomework = root + "changeHomework";
 }

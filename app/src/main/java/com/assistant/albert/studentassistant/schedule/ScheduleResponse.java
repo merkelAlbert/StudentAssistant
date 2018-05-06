@@ -3,10 +3,10 @@ package com.assistant.albert.studentassistant.schedule;
 import java.util.ArrayList;
 
 
-class ClassChedule {
+class ClassSchedule {
     private ArrayList<String> classSchedule;
 
-    public ClassChedule() {
+    public ClassSchedule() {
         classSchedule = new ArrayList<>();
     }
 
@@ -29,10 +29,15 @@ class DaySchedule {
 
 public class ScheduleResponse {
 
+    private String id;
     private ArrayList<ArrayList<ArrayList<String>>> schedule;
 
     public ScheduleResponse() {
         this.schedule = new ArrayList<>();
+    }
+
+    public String Id() {
+        return id;
     }
 
     public ArrayList<ArrayList<ArrayList<String>>> Schedule() {

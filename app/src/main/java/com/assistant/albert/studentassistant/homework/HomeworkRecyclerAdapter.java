@@ -1,13 +1,16 @@
 package com.assistant.albert.studentassistant.homework;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
 
@@ -16,9 +19,13 @@ import java.util.ArrayList;
 public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecyclerAdapter.ViewHolder> {
 
     private final boolean[] firstCardSelected = {false};
-    int selectedCounter;
+    private int selectedCounter;
     private ArrayList<HomeworkItem> dataSet;
     private View view;
+
+    private final int EDIT = 0;
+    private final int PASSED = 1;
+    private final int DELETE = 2;
 
     public HomeworkRecyclerAdapter(ArrayList<HomeworkItem> dataSet) {
         this.dataSet = dataSet;
@@ -64,18 +71,43 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         });
         holder.cardView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
-            public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            public void onCreateContextMenu(ContextMenu menu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 menu.setHeaderTitle("Домашнее задание");
-                menu.add(0, view.getId(), 0, "Изменить");//groupId, itemId, order, title
-                menu.add(0, view.getId(), 0, "Сдано");
-                menu.add(0, view.getId(), 0, "Удалить");
+                menu.add(0, PASSED, 0, "Сдано");
+                menu.add(0, EDIT, 1, "Изменить");//groupId, itemId, order, title
+                menu.add(0, DELETE, 2, "Удалить");
+
+                for (int i = 0; i < menu.size(); i++) {
+                    menu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case EDIT: {
+                                    Intent editHomework = new Intent(view.getContext(), NewHomeworkActivity.class);
+                                    editHomework.putExtra("id", holder.id);
+                                    editHomework.putExtra("subject", holder.subject.getText());
+                                    editHomework.putExtra("exercise", holder.exercise.getText());
+                                    editHomework.putExtra("week", holder.time.getText());
+                                    editHomework.putExtra("editing", "true");
+                                    view.getContext().startActivity(editHomework);
+                                    break;
+                                }
+                                case PASSED: {
+                                    Toast.makeText(view.getContext(), "s", Toast.LENGTH_LONG).show();
+                                    break;
+                                }
+                                case DELETE: {
+                                    Toast.makeText(view.getContext(), "d", Toast.LENGTH_LONG).show();
+                                    break;
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                }
+
             }
         });
-//        if (selectedCounter > 0) {
-//            textView.setText(selectedCounter);
-//        } else {
-//            textView.setText(R.string.app_name);
-//        }
     }
 
     private void setColor(View view, HomeworkRecyclerAdapter.ViewHolder holder, int time) {
@@ -102,6 +134,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
 
     @Override
     public void onBindViewHolder(HomeworkRecyclerAdapter.ViewHolder holder, int position) {
+        holder.id = dataSet.get(position).Id();
         holder.time.setText(Integer.toString(dataSet.get(position).Time()));
         holder.exercise.setText(dataSet.get(position).Exercise());
         holder.subject.setText(dataSet.get(position).Subject());
@@ -127,6 +160,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         TextView subject;
         TextView exercise;
         TextView time;
+        String id;
         boolean selected;
 
 
