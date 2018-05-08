@@ -17,33 +17,24 @@
             tools:context=".homework.NewHomeworkActivity">
 
             <EditText
+
                 android:id="@+id/addSubject"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:backgroundTint="@color/colorPrimary"
+                style="@style/NewHomeworkItemStyle"
                 android:hint="Предмет"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="30dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <EditText
                 android:id="@+id/addExercise"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:backgroundTint="@color/colorPrimary"
+                style="@style/NewHomeworkItemStyle"
                 android:hint="Задание"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addSubject" />
 
             <EditText
                 android:id="@+id/addWeek"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:backgroundTint="@color/colorPrimary"
+                style="@style/NewHomeworkItemStyle"
                 android:hint="Неделя сдачи"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addExercise" />
@@ -51,10 +42,10 @@
             <Button
                 android:id="@+id/submitHomework"
                 android:layout_width="wrap_content"
-                android:padding="10dp"
                 android:layout_height="56dp"
                 android:layout_margin="30dp"
                 android:background="@color/colorPrimary"
+                android:padding="10dp"
                 android:text="Подтвердить"
                 android:textColor="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"

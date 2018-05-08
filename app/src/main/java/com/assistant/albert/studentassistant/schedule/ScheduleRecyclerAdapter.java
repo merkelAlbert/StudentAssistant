@@ -24,7 +24,7 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
 
     @Override
     public ScheduleRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        scheduleCardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_schedule,
+        scheduleCardView = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_schedule,
                 parent, false);
         ViewHolder viewHolder = new ViewHolder(scheduleCardView);
         return viewHolder;
@@ -43,7 +43,7 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
             ArrayList<String> classSchedule = (ArrayList<String>) daySchedule.get(i);
 
             CardView subjectCardView = (CardView) LayoutInflater.from(holder.scheduleOfDay.getContext()).
-                    inflate(R.layout.card_schedule_subject, holder.scheduleOfDay, false);
+                    inflate(R.layout.content_schedule_subject, holder.scheduleOfDay, false);
             TextView subjectTextView = subjectCardView.findViewById(R.id.scheduleSubjectTextView);
 
             String subjectIndex = Integer.toString(i + 1) + ". ";

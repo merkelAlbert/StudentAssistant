@@ -126,7 +126,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
 
     @Override
     public HomeworkRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_homework,
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_homework,
                 parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
