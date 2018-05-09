@@ -5,13 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView
-        style="@style/CardStyle"
-        android:layout_height="400dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
 
         <android.support.constraint.ConstraintLayout
+            android:layout_marginTop="100dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".homework.NewHomeworkActivity">
@@ -51,7 +47,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addWeek" />
-
+            <include layout="@layout/progress_bar"/>
         </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

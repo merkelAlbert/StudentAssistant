@@ -15,7 +15,8 @@ public class SessionManager {
     private int PRIVATE_MODE = 0;
     private static final String PREF_NAME = "StudentAssistant";
     private static final String IS_LOGIN = "IsLoggedIn";
-    public static final String KEY_NAME = "Name";
+    public static final String KEY_EMAIL = "Email";
+    public static final String KEY_ID = "Id";
 
     public SessionManager(Context context){
         this.context = context;
@@ -23,9 +24,10 @@ public class SessionManager {
         editor = preferences.edit();
     }
 
-    public void createLoginSession(String name){
+    public void createLoginSession(String email, String id){
         editor.putBoolean(IS_LOGIN, true);
-        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_ID, id);
         editor.commit();
     }
 
@@ -36,7 +38,8 @@ public class SessionManager {
     public HashMap<String, String> getUserDetails(){
         HashMap<String, String> user = new HashMap<String, String>();
 
-        user.put(KEY_NAME, preferences.getString(KEY_NAME, null));
+        user.put(KEY_EMAIL, preferences.getString(KEY_EMAIL, null));
+        user.put(KEY_ID, preferences.getString(KEY_ID, null));
         return user;
     }
 
