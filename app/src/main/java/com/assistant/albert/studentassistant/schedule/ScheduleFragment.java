@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 
 public class ScheduleFragment extends Fragment {
 
-    private ScheduleResponse scheduleResponse;
+    private ScheduleItem scheduleItem;
     private View view;
     private ProgressBar spinner;
     private SwipeRefreshLayout scheduleSwipeRefreshLayout;
@@ -46,9 +47,9 @@ public class ScheduleFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         spinner.setVisibility(View.GONE);
-                        scheduleResponse = new ScheduleResponse();
+                        scheduleItem = new ScheduleItem();
                         try {
-                            JSONArray schedule = response.getJSONArray("schedule");
+                            JSONArray schedule = response.getJSONObject("schedule").getJSONArray("schedule");
                             for (int i = 0; i < schedule.length(); i++) {
                                 DaySchedule daySchedule = new DaySchedule();
                                 JSONArray dayJsonArray = schedule.getJSONArray(i);
@@ -56,17 +57,17 @@ public class ScheduleFragment extends Fragment {
                                     ClassSchedule classSchedule = new ClassSchedule();
                                     JSONArray classJsonArray = dayJsonArray.getJSONArray(j);
                                     for (int k = 0; k < classJsonArray.length(); k++) {
-                                        classSchedule.getClassSchedule().add(classJsonArray.getString(k));
+                                        classSchedule.Schedule().add(classJsonArray.getString(k));
                                     }
-                                    daySchedule.getDaySchedule().add(classSchedule.getClassSchedule());
+                                    daySchedule.Schedule().add(classSchedule.Schedule());
                                 }
-                                scheduleResponse.Schedule().add(daySchedule.getDaySchedule());
+                                scheduleItem.Schedule().add(daySchedule.Schedule());
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        RecyclerView.Adapter adapter = new ScheduleRecyclerAdapter(scheduleResponse);
+                        RecyclerView.Adapter adapter = new ScheduleRecyclerAdapter(scheduleItem);
                         recyclerView.setAdapter(adapter);
                     }
                 },
@@ -99,7 +100,7 @@ public class ScheduleFragment extends Fragment {
         recyclerView = view.findViewById(R.id.scheduleRecycler);
         spinner = view.findViewById(R.id.progressBar);
         reloadButton = view.findViewById(R.id.reloadButton);
-        scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleOfDay);
+        scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleSwipeRefreshLayout);
 
         reloadButton.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
@@ -110,7 +111,7 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onRefresh() {
                 scheduleSwipeRefreshLayout.setRefreshing(true);
-                scheduleResponse.Schedule().clear();
+                scheduleItem.Schedule().clear();
                 setDataFromServer(Urls.schedule);
 
                 scheduleSwipeRefreshLayout.post(new Runnable() {
@@ -122,7 +123,7 @@ public class ScheduleFragment extends Fragment {
                 });
             }
         });
-        if (scheduleResponse == null) {
+        if (scheduleItem == null) {
             this.setDataFromServer(Urls.schedule);
         }
         return view;

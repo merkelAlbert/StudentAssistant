@@ -6,17 +6,16 @@
     android:orientation="vertical">
 
     <include layout="@layout/progress_bar" />
-    <include layout="@layout/reload_button"/>
+
+    <include layout="@layout/reload_button" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-
-        android:id="@+id/scheduleOfDay"
+        android:id="@+id/scheduleSwipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".schedule.ScheduleFragment">
 
         <android.support.v7.widget.RecyclerView
-
             android:id="@+id/scheduleRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

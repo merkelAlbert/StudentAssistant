@@ -10,7 +10,7 @@ class ClassSchedule {
         classSchedule = new ArrayList<>();
     }
 
-    public ArrayList<String> getClassSchedule() {
+    public ArrayList<String> Schedule() {
         return classSchedule;
     }
 }
@@ -22,17 +22,17 @@ class DaySchedule {
         daySchedule = new ArrayList<>();
     }
 
-    public ArrayList<ArrayList<String>> getDaySchedule() {
+    public ArrayList<ArrayList<String>> Schedule() {
         return daySchedule;
     }
 }
 
-public class ScheduleResponse {
+public class ScheduleItem {
 
     private String id;
     private ArrayList<ArrayList<ArrayList<String>>> schedule;
 
-    public ScheduleResponse() {
+    public ScheduleItem() {
         this.schedule = new ArrayList<>();
     }
 

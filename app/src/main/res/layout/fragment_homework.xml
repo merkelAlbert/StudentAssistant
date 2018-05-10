@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/homeworkContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".homework.HomeworkFragment">
 
 
-        <android.support.v7.widget.RecyclerView
-            xmlns:tools="http://schemas.android.com/tools"
+        <android.support.v7.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/homeworkRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/progress_bar"/>
-    <include layout="@layout/reload_button"/>
+    <include layout="@layout/progress_bar" />
+
+    <include layout="@layout/reload_button" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/homeworkFAB"
@@ -29,6 +28,6 @@
         android:layout_height="60dp"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_fab_new_item"/>
+        android:src="@drawable/ic_fab_new_item"
+        app:backgroundTint="@color/colorPrimary" />
 </android.support.design.widget.CoordinatorLayout>

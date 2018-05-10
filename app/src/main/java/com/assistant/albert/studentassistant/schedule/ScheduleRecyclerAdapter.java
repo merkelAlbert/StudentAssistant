@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecyclerAdapter.ViewHolder> {
 
-    private ScheduleResponse dataSet;
+    private ScheduleItem dataSet;
     private View scheduleCardView;
 
-    public ScheduleRecyclerAdapter(ScheduleResponse dataSet) {
+    public ScheduleRecyclerAdapter(ScheduleItem dataSet) {
         this.dataSet = dataSet;
     }
 

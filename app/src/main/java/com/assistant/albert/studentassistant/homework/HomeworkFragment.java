@@ -57,7 +57,6 @@ public class HomeworkFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        Toast.makeText(getContext(),url+userId,Toast.LENGTH_SHORT).show();
         registerForContextMenu(recyclerView);
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url + userId, null,

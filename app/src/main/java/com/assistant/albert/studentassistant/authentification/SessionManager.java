@@ -17,6 +17,7 @@ public class SessionManager {
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_EMAIL = "Email";
     public static final String KEY_ID = "Id";
+    public static final String KEY_SCHEDULE="Schedule";
 
     public SessionManager(Context context){
         this.context = context;
@@ -28,6 +29,11 @@ public class SessionManager {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_ID, id);
+        editor.commit();
+    }
+
+    public void add(String key, String value){
+        editor.putString(key,value);
         editor.commit();
     }
 

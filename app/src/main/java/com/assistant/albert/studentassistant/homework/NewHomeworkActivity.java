@@ -50,7 +50,6 @@ public class NewHomeworkActivity extends Activity {
         final EditText addExercise = findViewById(R.id.addExercise);
         final EditText addWeek = findViewById(R.id.addWeek);
         final ProgressBar spinner = findViewById(R.id.progressBar);
-        Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_SHORT).show();
         spinner.setVisibility(View.GONE);
 
         isEditing = getIntent().getStringExtra("editing").equals("true");
