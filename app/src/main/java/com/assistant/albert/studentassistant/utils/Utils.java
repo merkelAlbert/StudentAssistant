@@ -57,6 +57,44 @@ public class Utils {
     }
 
 
+    public static void newSchedule(final Activity activity, final Button button,
+                                   final ProgressBar spinner, final String url, final JSONObject data){
+        setupViews(activity, button, spinner);
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
+                try {
+                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (Integer.parseInt(response.get("status").toString()) == 200) {
+                        Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(i);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
+                handleError(activity, error);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
 
     public static void newHomework(final Activity activity, final Button button,
                                    final ProgressBar spinner, final String url, final JSONObject data) {
@@ -199,5 +237,6 @@ public class Utils {
         progressBar.setY(button.getY());
         button.setVisibility(View.GONE);
     }
+
 
 }

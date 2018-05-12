@@ -8,4 +8,5 @@ public class Urls {
     public static String changeHomework = root + "changeHomework/";
     public static String register = root + "register/";
     public static String login = root + "login/";
+    public static String addSchedule = root + "addSchedule/";
 }

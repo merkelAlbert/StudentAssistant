@@ -7,25 +7,42 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
+import com.assistant.albert.studentassistant.Urls;
+import com.assistant.albert.studentassistant.authentification.LoginActivity;
+import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.utils.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddScheduleActivity extends AppCompatActivity {
 
     private final int ONEDAYSUBJECTSNUMBER = 7;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
         final LinearLayout container = findViewById(R.id.addScheduleContainer);
-        Button submitButton = findViewById(R.id.submitSchedule);
+        final Button submitButton = findViewById(R.id.submitSchedule);
+        final ProgressBar spinner = findViewById(R.id.progressBar);
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        final String userId = user.get(SessionManager.KEY_ID);
 
+        spinner.setVisibility(View.GONE);
 
         saveSchedule(container);
 
@@ -33,10 +50,51 @@ public class AddScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ScheduleItem schedule = getSchedule(container);
-                Toast.makeText(getApplicationContext(), schedule.Schedule().get(0).get(1).get(1).toString(), Toast.LENGTH_SHORT).show();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    JSONArray scheduleArray = new JSONArray();
+                    for (int i = 0; i < schedule.Schedule().size(); i++) {
+                        DaySchedule daySchedule = new DaySchedule();
+                        daySchedule.Schedule().addAll(schedule.Schedule().get(i));
+                        JSONArray dayArray = new JSONArray();
+                        for (int j = 0; j < daySchedule.Schedule().size(); j++) {
+                            ClassSchedule classSchedule = new ClassSchedule();
+                            classSchedule.Schedule().addAll(daySchedule.Schedule().get(j));
+                            JSONArray classArray = new JSONArray();
+                            for (int k = 0; k < classSchedule.Schedule().size(); k++) {
+                                classArray.put(classSchedule.Schedule().get(k));
+                            }
+                            dayArray.put(classArray);
+                        }
+                        scheduleArray.put(dayArray);
+                    }
+                    jsonObject.put("schedule", scheduleArray);
+                    jsonObject.put("userId", userId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Utils.newSchedule(AddScheduleActivity.this, submitButton, spinner, Urls.addSchedule, jsonObject);
             }
         });
+    }
 
+
+    private DaySchedule trimSchedule(DaySchedule daySchedule) {
+        DaySchedule temp = new DaySchedule();
+        int lastIndex = daySchedule.Schedule().size() - 1;
+        for (int i = daySchedule.Schedule().size() - 1; i >= 0; i--) {
+            ClassSchedule classSchedule = new ClassSchedule();
+            classSchedule.Schedule().addAll(daySchedule.Schedule().get(i));
+            if (classSchedule.Schedule().get(0).equals("-") && classSchedule.Schedule().get(1).equals("-")) {
+                lastIndex = i;
+                continue;
+            }
+            break;
+        }
+        for (int i = 0; i < lastIndex; i++) {
+            temp.Schedule().add(daySchedule.Schedule().get(i));
+        }
+        return temp;
     }
 
     private ScheduleItem getSchedule(ViewGroup container) {
@@ -51,12 +109,23 @@ public class AddScheduleActivity extends AppCompatActivity {
 
                 EditText numerator = scheduleOfDay.getChildAt(j).findViewById(R.id.numerator);
                 EditText denominator = scheduleOfDay.getChildAt(j).findViewById(R.id.denominator);
-
-                classSchedule.Schedule().add(numerator.getText().toString());
-                classSchedule.Schedule().add(denominator.getText().toString());
+                if (numerator.getText().toString().isEmpty()) {
+                    classSchedule.Schedule().add("-");
+                } else {
+                    classSchedule.Schedule().add(numerator.getText().toString());
+                }
+                if (denominator.getText().toString().isEmpty()) {
+                    classSchedule.Schedule().add("-");
+                } else {
+                    classSchedule.Schedule().add(denominator.getText().toString());
+                }
                 daySchedule.Schedule().add(classSchedule.Schedule());
             }
-            scheduleItem.Schedule().add(daySchedule.Schedule());
+
+            DaySchedule trimmed = new DaySchedule();
+            trimmed.Schedule().addAll(trimSchedule(daySchedule).Schedule());
+
+            scheduleItem.Schedule().add(trimmed.Schedule());
         }
         return scheduleItem;
     }
