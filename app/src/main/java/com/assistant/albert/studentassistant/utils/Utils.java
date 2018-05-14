@@ -96,6 +96,36 @@ public class Utils {
         queue.add(jsonObjectRequest);
     }
 
+    public static void passHomework(final Activity activity, final String url, final JSONObject data){
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (Integer.parseInt(response.get("status").toString()) == 200) {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handleError(activity, error);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
     public static void newHomework(final Activity activity, final Button button,
                                    final ProgressBar spinner, final String url, final JSONObject data) {
         setupViews(activity, button, spinner);
@@ -237,6 +267,7 @@ public class Utils {
         progressBar.setY(button.getY());
         button.setVisibility(View.GONE);
     }
+
 
 
 }

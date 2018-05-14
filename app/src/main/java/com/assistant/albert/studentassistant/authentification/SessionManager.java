@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 
 import com.assistant.albert.studentassistant.authentification.LoginActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SessionManager {
     private SharedPreferences preferences;
@@ -17,36 +20,48 @@ public class SessionManager {
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_EMAIL = "Email";
     public static final String KEY_ID = "Id";
-    public static final String KEY_SCHEDULE="Schedule";
+    public static final String KEY_SUBJECTS = "Subjects";
 
-    public SessionManager(Context context){
+    public SessionManager(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
+        editor.apply();
     }
 
-    public void createLoginSession(String email, String id){
+    public void createLoginSession(String email, String id) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_ID, id);
+        editor.putString(KEY_SUBJECTS, null);
         editor.commit();
     }
 
-    public void add(String key, String value){
-        editor.putString(key,value);
+    public void add(String key, String value) {
+        editor.putString(key, value);
         editor.commit();
     }
 
-    public boolean isLoggedIn(){
+    public void addSet(String key, ArrayList<String> list) {
+        Set<String> set = new HashSet<>();
+        set.addAll(list);
+        editor.putStringSet(key, set);
+        editor.commit();
+    }
+
+    public boolean isLoggedIn() {
         return preferences.getBoolean(IS_LOGIN, false);
     }
 
-    public HashMap<String, String> getUserDetails(){
+    public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
-
         user.put(KEY_EMAIL, preferences.getString(KEY_EMAIL, null));
         user.put(KEY_ID, preferences.getString(KEY_ID, null));
         return user;
+    }
+
+    public ArrayList<String> getUserSubjects() {
+        return new ArrayList<>(preferences.getStringSet(KEY_SUBJECTS, new HashSet<String>()));
     }
 
     public void checkLogin() {
@@ -58,7 +73,7 @@ public class SessionManager {
         }
     }
 
-    public void logoutUser(){
+    public void logoutUser() {
         editor.clear();
         editor.commit();
         Intent i = new Intent(context, LoginActivity.class);

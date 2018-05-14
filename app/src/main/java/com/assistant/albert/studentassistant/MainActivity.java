@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity
         SessionManager session = new SessionManager(getApplicationContext());
         session.checkLogin();
 
+
+
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

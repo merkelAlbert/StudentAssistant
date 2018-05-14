@@ -58,6 +58,13 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_instant_info" />
 
+            <android.support.design.widget.TabItem
+                android:id="@+id/settingsTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_settings" />
+
+
         </android.support.design.widget.TabLayout>
     </android.support.v7.widget.CardView>
 

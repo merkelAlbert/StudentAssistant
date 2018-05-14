@@ -2,6 +2,8 @@ package com.assistant.albert.studentassistant.schedule;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,44 +46,48 @@ public class AddScheduleActivity extends AppCompatActivity {
 
         spinner.setVisibility(View.GONE);
 
-        saveSchedule(container);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ScheduleItem schedule = getSchedule(container);
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    JSONArray scheduleArray = new JSONArray();
-                    for (int i = 0; i < schedule.Schedule().size(); i++) {
-                        DaySchedule daySchedule = new DaySchedule();
-                        daySchedule.Schedule().addAll(schedule.Schedule().get(i));
-                        JSONArray dayArray = new JSONArray();
-                        for (int j = 0; j < daySchedule.Schedule().size(); j++) {
-                            ClassSchedule classSchedule = new ClassSchedule();
-                            classSchedule.Schedule().addAll(daySchedule.Schedule().get(j));
-                            JSONArray classArray = new JSONArray();
-                            for (int k = 0; k < classSchedule.Schedule().size(); k++) {
-                                classArray.put(classSchedule.Schedule().get(k));
-                            }
-                            dayArray.put(classArray);
-                        }
-                        scheduleArray.put(dayArray);
+
+    saveSchedule(container);
+
+        submitButton.setOnClickListener(new View.OnClickListener()
+
+    {
+        @Override
+        public void onClick (View view){
+        ScheduleItem schedule = getSchedule(container);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray scheduleArray = new JSONArray();
+            for (int i = 0; i < schedule.Schedule().size(); i++) {
+                DaySchedule daySchedule = new DaySchedule();
+                daySchedule.Schedule().addAll(schedule.Schedule().get(i));
+                JSONArray dayArray = new JSONArray();
+                for (int j = 0; j < daySchedule.Schedule().size(); j++) {
+                    ClassSchedule classSchedule = new ClassSchedule();
+                    classSchedule.Schedule().addAll(daySchedule.Schedule().get(j));
+                    JSONArray classArray = new JSONArray();
+                    for (int k = 0; k < classSchedule.Schedule().size(); k++) {
+                        classArray.put(classSchedule.Schedule().get(k));
                     }
-                    jsonObject.put("schedule", scheduleArray);
-                    jsonObject.put("userId", userId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    dayArray.put(classArray);
                 }
-                Utils.newSchedule(AddScheduleActivity.this, submitButton, spinner, Urls.addSchedule, jsonObject);
+                scheduleArray.put(dayArray);
             }
-        });
+            jsonObject.put("schedule", scheduleArray);
+            jsonObject.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Utils.newSchedule(AddScheduleActivity.this, submitButton, spinner, Urls.addSchedule, jsonObject);
     }
+    });
+}
 
 
     private DaySchedule trimSchedule(DaySchedule daySchedule) {
         DaySchedule temp = new DaySchedule();
-        int lastIndex = daySchedule.Schedule().size() - 1;
+        int lastIndex = daySchedule.Schedule().size();
         for (int i = daySchedule.Schedule().size() - 1; i >= 0; i--) {
             ClassSchedule classSchedule = new ClassSchedule();
             classSchedule.Schedule().addAll(daySchedule.Schedule().get(i));

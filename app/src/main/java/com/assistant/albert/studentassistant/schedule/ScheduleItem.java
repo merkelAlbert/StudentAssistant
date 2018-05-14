@@ -2,6 +2,18 @@ package com.assistant.albert.studentassistant.schedule;
 
 import java.util.ArrayList;
 
+class Subjects {
+    private ArrayList<String> list;
+
+    public Subjects() {
+        list = new ArrayList<>();
+    }
+
+    public ArrayList<String> List() {
+        return list;
+    }
+}
+
 
 class ClassSchedule {
     private ArrayList<String> classSchedule;
@@ -30,6 +42,7 @@ class DaySchedule {
 public class ScheduleItem {
 
     private String id;
+    private String userId;
     private ArrayList<ArrayList<ArrayList<String>>> schedule;
 
     public ScheduleItem() {
@@ -38,6 +51,14 @@ public class ScheduleItem {
 
     public String Id() {
         return id;
+    }
+
+    public String UserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public ArrayList<ArrayList<ArrayList<String>>> Schedule() {

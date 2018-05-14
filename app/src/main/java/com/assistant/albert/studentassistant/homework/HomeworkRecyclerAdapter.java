@@ -32,6 +32,11 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         this.selectedCounter = 0;
     }
 
+
+    private void passHomework(ViewHolder holder){
+
+    }
+
     private void handleClick(View view, final HomeworkRecyclerAdapter.ViewHolder holder, final int color) {
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -93,7 +98,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     break;
                                 }
                                 case PASSED: {
-                                    Toast.makeText(view.getContext(), "s", Toast.LENGTH_LONG).show();
+
                                     break;
                                 }
                                 case DELETE: {
@@ -128,8 +133,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
     public HomeworkRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_homework,
                 parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override

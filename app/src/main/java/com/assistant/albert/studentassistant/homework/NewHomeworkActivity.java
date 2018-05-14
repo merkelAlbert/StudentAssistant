@@ -3,9 +3,11 @@ package com.assistant.albert.studentassistant.homework;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,6 +30,7 @@ import com.assistant.albert.studentassistant.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +49,7 @@ public class NewHomeworkActivity extends Activity {
         HashMap<String, String> user = session.getUserDetails();
         final String userId = user.get(SessionManager.KEY_ID);
 
-        final EditText addSubject = findViewById(R.id.addSubject);
+        final Spinner addSubjectSpinner = findViewById(R.id.addSubject);
         final EditText addExercise = findViewById(R.id.addExercise);
         final EditText addWeek = findViewById(R.id.addWeek);
         final ProgressBar spinner = findViewById(R.id.progressBar);
@@ -54,12 +57,17 @@ public class NewHomeworkActivity extends Activity {
 
         isEditing = getIntent().getStringExtra("editing").equals("true");
         String tempId = "";
+        ArrayList<String> subjects = session.getUserSubjects();
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, subjects);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+        addSubjectSpinner.setAdapter(spinnerAdapter);
+        addSubjectSpinner.setPrompt("Предмет");
         if (isEditing) {
             tempId = getIntent().getStringExtra("id");
-            String subject = getIntent().getStringExtra("subject");
             String exercise = getIntent().getStringExtra("exercise");
             String week = getIntent().getStringExtra("week");
-            addSubject.setText(subject);
+            String subject = getIntent().getStringExtra("subject");
+            addSubjectSpinner.setSelection(getIndex(subjects, subject));
             addExercise.setText(exercise);
             addWeek.setText(week);
         }
@@ -76,9 +84,10 @@ public class NewHomeworkActivity extends Activity {
                             jsonObject.put("id", id);
                         }
                         jsonObject.put("userId", userId);
-                        jsonObject.put("subject", addSubject.getText().toString());
+                        jsonObject.put("subject", addSubjectSpinner.getSelectedItem());
                         jsonObject.put("exercise", addExercise.getText().toString());
                         jsonObject.put("time", addWeek.getText().toString());
+                        jsonObject.put("passed", false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -102,5 +111,13 @@ public class NewHomeworkActivity extends Activity {
             return false;
         }
         return true;
+    }
+
+    private int getIndex(ArrayList<String> list, String subject) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(subject))
+                return i;
+        }
+        return 0;
     }
 }

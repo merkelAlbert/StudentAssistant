@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:gravity="left|center_vertical"
-    android:textColor="@color/white"
     android:padding="10dp"
     android:singleLine="true"
+    android:textColor="@color/colorPrimary"
     android:drawableRight="@drawable/ic_drop_down"
     />
