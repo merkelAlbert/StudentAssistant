@@ -32,8 +32,8 @@ public class LoginActivity extends AppCompatActivity {
         final Button enter = findViewById(R.id.enter);
         final ProgressBar spinner = findViewById(R.id.progressBar);
         final TextView register = findViewById(R.id.registerTextView);
-
         spinner.setVisibility(View.GONE);
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override

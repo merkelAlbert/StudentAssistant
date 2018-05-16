@@ -5,14 +5,16 @@ public class HomeworkItem {
     private String userId;
     private String subject;
     private String exercise;
-    private int time;
+    private int week;
+    private int remainedDays;
 
-    public HomeworkItem(String id, String userId, String subject, String exercise, int time) {
+    public HomeworkItem(String id, String userId, String subject, String exercise, int week, int remainedDays) {
         this.id = id;
         this.userId = userId;
         this.subject = subject;
         this.exercise = exercise;
-        this.time = time;
+        this.week = week;
+        this.remainedDays = remainedDays;
     }
 
     public String Id() {
@@ -31,7 +33,11 @@ public class HomeworkItem {
         return exercise;
     }
 
-    public int Time() {
-        return time;
+    public int Week() {
+        return week;
+    }
+
+    public int RemainedDays(){
+        return remainedDays;
     }
 }

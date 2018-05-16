@@ -24,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +44,7 @@ public class ScheduleFragment extends Fragment {
     private RecyclerView recyclerView;
     private SessionManager session;
 
-    public void setDataFromServer(final String userId, final String url) {
+    public void getSchedule(final String userId, final String url) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
@@ -63,35 +64,22 @@ public class ScheduleFragment extends Fragment {
                                         .setAction("Заполнить", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                Intent i = new Intent(getContext(), AddScheduleActivity.class);
+                                                Intent i = new Intent(getContext(), NewScheduleActivity.class);
                                                 startActivity(i);
                                             }
                                         }).show();
                             } else if (Integer.parseInt(response.getString("status")) == 200) {
-                                JSONArray schedule = response.getJSONObject("schedule").getJSONArray("schedule");
                                 JSONArray subjects = response.getJSONArray("subjects");
                                 for (int i = 0; i < subjects.length(); i++) {
                                     subjectsList.add(subjects.getString(i));
                                 }
-                                for (int i = 0; i < schedule.length(); i++) {
-                                    DaySchedule daySchedule = new DaySchedule();
-                                    JSONArray dayJsonArray = schedule.getJSONArray(i);
-                                    for (int j = 0; j < dayJsonArray.length(); j++) {
-                                        ClassSchedule classSchedule = new ClassSchedule();
-                                        JSONArray classJsonArray = dayJsonArray.getJSONArray(j);
-                                        for (int k = 0; k < classJsonArray.length(); k++) {
-                                            classSchedule.Schedule().add(classJsonArray.getString(k));
-                                        }
-                                        daySchedule.Schedule().add(classSchedule.Schedule());
-                                    }
-                                    scheduleItem.Schedule().add(daySchedule.Schedule());
-                                }
+                                scheduleItem = Utils.getScheduleFromJson(response.getJSONObject("schedule"));
+                                session.add(SessionManager.KEY_SCHEDULE,response.getJSONObject("schedule").toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        scheduleItem.setUserId(userId);
-                        session.addSet(SessionManager.KEY_SUBJECTS,subjectsList);
+                        session.addSet(SessionManager.KEY_SUBJECTS, subjectsList);
                         RecyclerView.Adapter adapter = new ScheduleRecyclerAdapter(scheduleItem);
                         recyclerView.setAdapter(adapter);
                     }
@@ -108,7 +96,7 @@ public class ScheduleFragment extends Fragment {
                             public void onClick(View view) {
                                 reloadButton.setVisibility(View.GONE);
                                 spinner.setVisibility(View.VISIBLE);
-                                setDataFromServer(userId, url);
+                                getSchedule(userId, url);
                             }
                         });
                     }
@@ -143,7 +131,7 @@ public class ScheduleFragment extends Fragment {
             public void onRefresh() {
                 scheduleSwipeRefreshLayout.setRefreshing(true);
                 scheduleItem.Schedule().clear();
-                setDataFromServer(userId, Urls.schedule);
+                getSchedule(userId, Urls.schedule);
 
                 scheduleSwipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -153,9 +141,8 @@ public class ScheduleFragment extends Fragment {
                 });
             }
         });
-        if (scheduleItem == null) {
-            this.setDataFromServer(userId, Urls.schedule);
-        }
+        if (scheduleItem == null)
+            this.getSchedule(userId, Urls.schedule);
         return view;
     }
 

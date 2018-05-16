@@ -2,6 +2,7 @@ package com.assistant.albert.studentassistant.homework;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewHomeworkActivity extends Activity {
+public class NewHomeworkActivity extends AppCompatActivity {
 
 
     boolean isEditing;
@@ -55,7 +56,7 @@ public class NewHomeworkActivity extends Activity {
         final ProgressBar spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
-        isEditing = getIntent().getStringExtra("editing").equals("true");
+        isEditing = getIntent().getBooleanExtra("editing", false);
         String tempId = "";
         ArrayList<String> subjects = session.getUserSubjects();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, subjects);

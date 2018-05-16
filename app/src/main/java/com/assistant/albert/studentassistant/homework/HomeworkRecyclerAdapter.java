@@ -93,7 +93,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     editHomework.putExtra("subject", holder.subject.getText());
                                     editHomework.putExtra("exercise", holder.exercise.getText());
                                     editHomework.putExtra("week", holder.time.getText());
-                                    editHomework.putExtra("editing", "true");
+                                    editHomework.putExtra("editing", true);
                                     view.getContext().startActivity(editHomework);
                                     break;
                                 }
@@ -139,7 +139,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
     @Override
     public void onBindViewHolder(HomeworkRecyclerAdapter.ViewHolder holder, int position) {
         holder.id = dataSet.get(position).Id();
-        holder.time.setText(Integer.toString(dataSet.get(position).Time()));
+        holder.time.setText(Integer.toString(dataSet.get(position).RemainedDays()));
         holder.exercise.setText(dataSet.get(position).Exercise());
         holder.subject.setText(dataSet.get(position).Subject());
         holder.selected = false;

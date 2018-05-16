@@ -25,7 +25,13 @@ import com.assistant.albert.studentassistant.MainActivity;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.schedule.ClassSchedule;
+import com.assistant.albert.studentassistant.schedule.DaySchedule;
+import com.assistant.albert.studentassistant.schedule.ScheduleDays;
+import com.assistant.albert.studentassistant.schedule.ScheduleItem;
+import com.google.gson.JsonArray;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,7 +64,7 @@ public class Utils {
 
 
     public static void newSchedule(final Activity activity, final Button button,
-                                   final ProgressBar spinner, final String url, final JSONObject data){
+                                   final ProgressBar spinner, final String url, final JSONObject data) {
         setupViews(activity, button, spinner);
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
@@ -70,9 +76,12 @@ public class Utils {
                 try {
                     Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
-                        Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        activity.startActivity(i);
+                        if (activity.getIntent().getStringExtra("isEditing").equals("true")) {
+                            Toast.makeText(activity.getApplicationContext(),response.getString("message"),Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            activity.startActivity(i);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -96,7 +105,7 @@ public class Utils {
         queue.add(jsonObjectRequest);
     }
 
-    public static void passHomework(final Activity activity, final String url, final JSONObject data){
+    public static void passHomework(final Activity activity, final String url, final JSONObject data) {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
                 data, new Response.Listener<JSONObject>() {
@@ -179,7 +188,6 @@ public class Utils {
                     Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         activity.onBackPressed();
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -204,7 +212,7 @@ public class Utils {
     }
 
     public static void login(final Activity activity, final Button button,
-                             final ProgressBar spinner, final String url, final JSONObject data){
+                             final ProgressBar spinner, final String url, final JSONObject data) {
         setupViews(activity, button, spinner);
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
@@ -217,10 +225,12 @@ public class Utils {
                     Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         SessionManager session = new SessionManager(activity.getApplicationContext());
-                        session.createLoginSession(data.getString("email"),response.getString("id"));
+                        session.createLoginSession(data.getString("email"), response.getString("id"));
                         Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         activity.startActivity(i);
+                        activity.finish();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -244,7 +254,7 @@ public class Utils {
         queue.add(jsonObjectRequest);
     }
 
-    private static void handleError(Activity activity, VolleyError error) {
+    public static void handleError(Activity activity, VolleyError error) {
         if (error instanceof TimeoutError || error instanceof NoConnectionError) {
             Toast.makeText(activity.getApplicationContext(), "Сервер недоступен", Toast.LENGTH_LONG).show();
         } else if (error instanceof AuthFailureError) {
@@ -261,13 +271,36 @@ public class Utils {
         }
     }
 
-    private static void setupViews(Activity activity, Button button, ProgressBar progressBar) {
+    public static void setupViews(Activity activity, Button button, ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setX(button.getX() + button.getWidth() / 2 - activity.getResources().getDimension(R.dimen.progress_bar_size) / 2);
         progressBar.setY(button.getY());
         button.setVisibility(View.GONE);
     }
 
-
+    public static ScheduleItem getScheduleFromJson(JSONObject jsonObject) {
+        ScheduleItem schedule = new ScheduleItem();
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("schedule");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                DaySchedule daySchedule = new DaySchedule();
+                JSONArray dayJsonArray = jsonArray.getJSONArray(i);
+                for (int j = 0; j < dayJsonArray.length(); j++) {
+                    ClassSchedule classSchedule = new ClassSchedule();
+                    JSONArray classJsonArray = dayJsonArray.getJSONArray(j);
+                    for (int k = 0; k < classJsonArray.length(); k++) {
+                        classSchedule.Schedule().add(classJsonArray.getString(k));
+                    }
+                    daySchedule.Schedule().add(classSchedule.Schedule());
+                }
+                schedule.Schedule().add(daySchedule.Schedule());
+            }
+            schedule.setId(jsonObject.getString("id"));
+            schedule.setUserId(jsonObject.getString("userId"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return schedule;
+    }
 
 }

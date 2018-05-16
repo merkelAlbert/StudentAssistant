@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.authentification.SessionManager;
 import com.assistant.albert.studentassistant.homework.HomeworkFragment;
@@ -15,14 +16,14 @@ public class MainActivity extends AppCompatActivity
         ScheduleFragment.OnFragmentInteractionListener {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SessionManager session = new SessionManager(getApplicationContext());
-        session.checkLogin();
 
+        SessionManager session = new SessionManager(getApplicationContext());
+        session.checkLogin(this);
 
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity
         final ViewPager viewPager = findViewById(R.id.pager);
         final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.setOffscreenPageLimit(tabLayout.getTabCount()-1);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

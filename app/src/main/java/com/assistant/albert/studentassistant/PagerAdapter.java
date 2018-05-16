@@ -3,10 +3,13 @@ package com.assistant.albert.studentassistant;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.homework.HomeworkFragment;
 import com.assistant.albert.studentassistant.instantinfo.InstantInfoFragment;
 import com.assistant.albert.studentassistant.schedule.ScheduleFragment;
+import com.assistant.albert.studentassistant.settings.SettingsFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -19,16 +22,22 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Log.i("pos", String.valueOf(position));
+        Fragment fragment = new Fragment();
         switch (position) {
             case 0:
-                return new HomeworkFragment();
+                fragment = new HomeworkFragment();
+                break;
             case 1:
-                return new ScheduleFragment();
+                fragment = new ScheduleFragment();
+                break;
             case 2:
-                return new InstantInfoFragment();
-            default:
-                return null;
+                fragment = new InstantInfoFragment();
+                break;
+            case 3:
+                fragment = new SettingsFragment();
         }
+        return fragment;
     }
 
     @Override

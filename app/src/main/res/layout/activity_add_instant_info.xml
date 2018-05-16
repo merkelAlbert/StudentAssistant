@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/app_padding"
+    tools:context=".instantinfo.NewInstantInfoActivity">
+
+    <EditText
+        android:id="@+id/userName"
+        style="@style/EditTextStyle"
+        android:inputType="textPersonName"
+        android:hint="ФИО"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/group"
+        style="@style/EditTextStyle"
+        android:layout_marginTop="0dp"
+        android:hint="Группа"
+        app:layout_constraintTop_toBottomOf="@id/userName" />
+
+    <TextView
+        android:id="@+id/startDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Дата начала учебы"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group" />
+
+    <CalendarView
+        android:id="@+id/startDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/startDateTextView" />
+
+    <Button
+        android:id="@+id/submitInstantInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:text="Подтвердить"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startDate" />
+
+</android.support.constraint.ConstraintLayout>

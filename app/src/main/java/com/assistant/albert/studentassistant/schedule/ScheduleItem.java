@@ -14,31 +14,6 @@ class Subjects {
     }
 }
 
-
-class ClassSchedule {
-    private ArrayList<String> classSchedule;
-
-    public ClassSchedule() {
-        classSchedule = new ArrayList<>();
-    }
-
-    public ArrayList<String> Schedule() {
-        return classSchedule;
-    }
-}
-
-class DaySchedule {
-    private ArrayList<ArrayList<String>> daySchedule;
-
-    public DaySchedule() {
-        daySchedule = new ArrayList<>();
-    }
-
-    public ArrayList<ArrayList<String>> Schedule() {
-        return daySchedule;
-    }
-}
-
 public class ScheduleItem {
 
     private String id;
@@ -59,6 +34,10 @@ public class ScheduleItem {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ArrayList<ArrayList<ArrayList<String>>> Schedule() {

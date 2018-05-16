@@ -10,4 +10,6 @@ public class Urls {
     public static String register = root + "register/";
     public static String login = root + "login/";
     public static String addSchedule = root + "addSchedule/";
+    public static String instantInfo = root + "instantInfo/";
+    public static String changeSchedule = root + "changeSchedule/";
 }

@@ -21,7 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
@@ -41,10 +41,10 @@ public class HomeworkFragment extends Fragment {
     public static Comparator<HomeworkItem> TimeComparator = new Comparator<HomeworkItem>() {
         @Override
         public int compare(HomeworkItem homeworkItem, HomeworkItem t1) {
-            return Integer.compare(homeworkItem.Time(), t1.Time());
+            return Integer.compare(homeworkItem.Week(), t1.Week());
         }
     };
-    private ArrayList<HomeworkItem> arrayList = new ArrayList<>();
+    private ArrayList<HomeworkItem> arrayList;
     private View view;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -53,33 +53,38 @@ public class HomeworkFragment extends Fragment {
     private Button reloadButton;
     private SessionManager session;
 
-    public void setDataFromServer(final String userId, final String url) {
+    public void getHomework(final String userId, final String url) {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         registerForContextMenu(recyclerView);
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url + userId, null,
-                new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url + userId, null,
+                new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         spinner.setVisibility(View.GONE);
                         arrayList = new ArrayList<>();
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(i);
+                        try {
+                            if (Integer.parseInt(response.getString("status")) == 404) {
+                                Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                            JSONArray homeworkArray = response.getJSONArray("homework");
+                            for (int i = 0; i < homeworkArray.length(); i++) {
+                                JSONObject jsonObject = homeworkArray.getJSONObject(i);
                                 arrayList.add(new HomeworkItem(
                                         jsonObject.getString("id"),
                                         userId,
                                         jsonObject.getString("subject"),
                                         jsonObject.getString("exercise"),
-                                        jsonObject.getInt("time")));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                        jsonObject.getInt("time"),
+                                        jsonObject.getInt("remainedDays")));
                             }
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+
                         Collections.sort(arrayList, new HomeworkComparator());
                         RecyclerView.Adapter adapter = new HomeworkRecyclerAdapter(arrayList);
                         recyclerView.setAdapter(adapter);
@@ -89,20 +94,19 @@ public class HomeworkFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         spinner.setVisibility(View.GONE);
-
                         reloadButton.setVisibility(View.VISIBLE);
                         reloadButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 reloadButton.setVisibility(View.GONE);
                                 spinner.setVisibility(View.VISIBLE);
-                                setDataFromServer(userId, url);
+                                getHomework(userId, url);
                             }
                         });
                     }
                 }
         );
-        queue.add(jsonArrayRequest);
+        queue.add(jsonObjectRequest);
     }
 
     @Override
@@ -118,6 +122,7 @@ public class HomeworkFragment extends Fragment {
         floatingActionButton = view.findViewById(R.id.homeworkFAB);
         spinner = view.findViewById(R.id.progressBar);
         reloadButton = view.findViewById(R.id.reloadButton);
+
 
         reloadButton.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
@@ -138,7 +143,6 @@ public class HomeworkFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent newHomework = new Intent(getActivity(), NewHomeworkActivity.class);
-                newHomework.putExtra("editing", "false");
                 getActivity().startActivity(newHomework);
 
             }
@@ -151,7 +155,7 @@ public class HomeworkFragment extends Fragment {
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                 arrayList.clear();
-                setDataFromServer(userId, Urls.homework);
+                getHomework(userId, Urls.homework);
 
                 swipeRefreshLayout.post(new Runnable() {
                     @Override
@@ -162,9 +166,8 @@ public class HomeworkFragment extends Fragment {
             }
         });
 
-        if (arrayList.isEmpty()) {
-            this.setDataFromServer(userId, Urls.homework);
-        }
+        if (arrayList == null)
+            this.getHomework(userId, Urls.homework);
         return view;
     }
 

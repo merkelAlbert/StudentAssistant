@@ -39,7 +39,6 @@
             app:tabIndicatorColor="@color/colorPrimary"
             app:tabIndicatorHeight="3dp">
 
-
             <android.support.design.widget.TabItem
                 android:id="@+id/homeworkTab"
                 android:layout_width="match_parent"
