@@ -38,7 +38,7 @@ public class NewScheduleActivity extends AppCompatActivity {
         final ProgressBar spinner = findViewById(R.id.progressBar);
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
         final String id = getIntent().getStringExtra("id");
         spinner.setVisibility(View.GONE);
         isEditing = getIntent().getBooleanExtra("isEditing", false);

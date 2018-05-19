@@ -36,7 +36,7 @@ public class NewInstantInfoActivity extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
         final HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_instant_info);

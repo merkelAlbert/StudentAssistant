@@ -38,7 +38,7 @@ public class SettingsFragment extends Fragment {
 
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
 
         ScheduleItem schedule = new ScheduleItem();
         try {

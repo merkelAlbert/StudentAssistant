@@ -34,7 +34,7 @@ public class NewHomeworkActivity extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
 
         final Spinner addSubjectSpinner = findViewById(R.id.addSubject);
         final EditText addExercise = findViewById(R.id.addExercise);

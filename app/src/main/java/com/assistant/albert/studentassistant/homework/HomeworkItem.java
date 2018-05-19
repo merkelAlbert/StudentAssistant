@@ -7,14 +7,16 @@ public class HomeworkItem {
     private String exercise;
     private int week;
     private int remainedDays;
+    private boolean passed;
 
-    public HomeworkItem(String id, String userId, String subject, String exercise, int week, int remainedDays) {
+    public HomeworkItem(String id, String userId, String subject, String exercise, int week, int remainedDays, boolean passed) {
         this.id = id;
         this.userId = userId;
         this.subject = subject;
         this.exercise = exercise;
         this.week = week;
         this.remainedDays = remainedDays;
+        this.passed = passed;
     }
 
     public String Id() {
@@ -40,4 +42,8 @@ public class HomeworkItem {
     public int RemainedDays(){
         return remainedDays;
     }
+    public boolean Passed(){
+        return passed;
+    }
+
 }

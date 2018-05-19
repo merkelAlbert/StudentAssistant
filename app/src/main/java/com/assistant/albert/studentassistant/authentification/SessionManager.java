@@ -18,10 +18,10 @@ public class SessionManager {
     private static final String PREF_NAME = "StudentAssistant";
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_EMAIL = "Email";
-    public static final String USER_ID = "UserId";
+    public static final String KEY_USER_ID = "UserId";
     public static final String KEY_SUBJECTS = "Subjects";
     public static final String KEY_SCHEDULE = "Schedule";
-    public static final String KEY_INSTANTINFO = "InstantInfo";
+    public static final String KEY_INSTANT_INFO = "InstantInfo";
 
     public SessionManager(Context context) {
         this.context = context;
@@ -33,11 +33,11 @@ public class SessionManager {
     public void createLoginSession(String email, String userId) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_EMAIL, email);
-        editor.putString(USER_ID, userId);
+        editor.putString(KEY_USER_ID, userId);
 
         editor.putString(KEY_SUBJECTS, null);
         editor.putString(KEY_SCHEDULE, null);
-        editor.putString(KEY_INSTANTINFO, null);
+        editor.putString(KEY_INSTANT_INFO, null);
         editor.commit();
     }
 
@@ -61,12 +61,12 @@ public class SessionManager {
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         user.put(KEY_EMAIL, preferences.getString(KEY_EMAIL, null));
-        user.put(USER_ID, preferences.getString(USER_ID, null));
+        user.put(KEY_USER_ID, preferences.getString(KEY_USER_ID, null));
         return user;
     }
 
     public String getInstantInfo(){
-        return preferences.getString(KEY_INSTANTINFO,"");
+        return preferences.getString(KEY_INSTANT_INFO,"");
     }
 
     public ArrayList<String> getUserSubjects() {

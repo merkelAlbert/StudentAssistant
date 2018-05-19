@@ -62,7 +62,7 @@ public class InstantInfoFragment extends Fragment {
                                         response.getInt("currentWeek"),
                                         response.getInt("totalHomework")
                                 );
-                                session.add(SessionManager.KEY_INSTANTINFO, response.toString());
+                                session.add(SessionManager.KEY_INSTANT_INFO, response.toString());
                                 String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
                                 String totalHomeworkStr = "Всего ДЗ: " + String.valueOf(instantInfo.TotalHomework());
                                 currentWeek.setText(weekStr);
@@ -106,7 +106,7 @@ public class InstantInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
 
         view = inflater.inflate(R.layout.fragment_instant_info, container, false);
         currentWeek = view.findViewById(R.id.currentWeek);

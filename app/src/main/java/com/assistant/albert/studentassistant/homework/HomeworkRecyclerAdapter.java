@@ -2,6 +2,7 @@ package com.assistant.albert.studentassistant.homework;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.provider.SyncStateContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -13,10 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
+import com.assistant.albert.studentassistant.Urls;
+import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.utils.Utils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecyclerAdapter.ViewHolder> {
 
@@ -24,6 +31,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
     private ArrayList<HomeworkItem> dataSet;
     private ArrayList<HomeworkRecyclerAdapter.ViewHolder> selectedHomework;
     private View view;
+    private SessionManager session;
 
     private final int EDIT = 0;
     private final int PASSED = 1;
@@ -34,10 +42,6 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         this.selectedHomework = new ArrayList<>();
     }
 
-
-    private void passHomework(ViewHolder holder) {
-
-    }
 
     private void handleClick(View view, final HomeworkRecyclerAdapter.ViewHolder holder, final int color) {
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -72,10 +76,13 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                         firstCardSelected[0] = false;
                     }
                 } else {
+                    selectedHomework.add(holder);
                     holder.cardView.showContextMenu();
                 }
             }
         });
+
+
         holder.cardView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -84,7 +91,6 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                 if (selectedHomework.size() == 0 || selectedHomework.size() == 1)
                     menu.add(0, EDIT, 1, "Изменить");//groupId, itemId, order, title
                 menu.add(0, DELETE, 2, "Удалить");
-
                 for (int i = 0; i < menu.size(); i++) {
                     menu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
@@ -101,8 +107,30 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     break;
                                 }
                                 case PASSED: {
-                                    JSONObject jsonObject = new JSONObject();
+                                    session = new SessionManager(view.getContext());
+                                    HashMap<String, String> user = session.getUserDetails();
+                                    final String userId = user.get(SessionManager.KEY_USER_ID);
+                                    JSONArray jsonArray = new JSONArray();
+                                    try {
+                                        for (int i = 0; i < selectedHomework.size(); i++) {
+                                            JSONObject jsonObject = new JSONObject();
+                                            jsonObject.put("id", selectedHomework.get(i).id);
+                                            jsonObject.put("userId", userId);
+                                            jsonObject.put("subject", selectedHomework.get(i)
+                                                    .subject.getText().toString());
+                                            jsonObject.put("exercise", selectedHomework.get(i)
+                                                    .exercise.getText().toString());
+                                            jsonObject.put("week", selectedHomework.get(i).week);
+                                            jsonObject.put("remainedDays", selectedHomework.get(i)
+                                                    .remainedDays.getText().toString());
+                                            jsonObject.put("passed", true);
 
+                                            jsonArray.put(i, jsonObject);
+                                        }
+                                        Utils.passHomework(view.getContext(), Urls.passHomework, jsonArray);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                                 }
                                 case DELETE: {
@@ -114,7 +142,6 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                         }
                     });
                 }
-
             }
         });
     }
@@ -150,7 +177,6 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.week = dataSet.get(position).Week();
         setColor(view, holder, Integer.parseInt(holder.remainedDays.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor());
-
     }
 
     @Override

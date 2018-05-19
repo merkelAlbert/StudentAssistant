@@ -84,7 +84,8 @@ public class HomeworkFragment extends Fragment {
                                             homeworkObject.getString("subject"),
                                             homeworkObject.getString("exercise"),
                                             homeworkObject.getInt("week"),
-                                            remainedDays));
+                                            remainedDays,
+                                            homeworkObject.getBoolean("passed")));
                                 }
                             }
                         } catch (JSONException e) {
@@ -121,7 +122,7 @@ public class HomeworkFragment extends Fragment {
                              Bundle savedInstanceState) {
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.USER_ID);
+        final String userId = user.get(SessionManager.KEY_USER_ID);
 
         view = inflater.inflate(R.layout.fragment_homework, container, false);
         recyclerView = view.findViewById(R.id.homeworkRecycler);

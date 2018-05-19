@@ -1,6 +1,7 @@
 package com.assistant.albert.studentassistant.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.Layout;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.MainActivity;
@@ -107,17 +109,17 @@ public class Utils {
         queue.add(jsonObjectRequest);
     }
 
-    public static void passHomework(final Activity activity, final String url, final JSONObject data) {
-        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
-                data, new Response.Listener<JSONObject>() {
+    public static void passHomework(final Context context, final String url, final JSONArray data) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 try {
-                    if (!response.isNull("message")) {
-                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    if (!response.getJSONObject(0).isNull("message")) {
+                        Toast.makeText(context, response.getJSONObject(0).getString("message"), Toast.LENGTH_LONG).show();
                     }
-                    if (Integer.parseInt(response.get("status").toString()) == 200) {
+                    if (Integer.parseInt(response.getJSONObject(0).get("status").toString()) == 200) {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,7 +128,7 @@ public class Utils {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                handleError(activity, error);
+                handleError((Activity) context, error);
             }
         }) {
             @Override
@@ -136,7 +138,7 @@ public class Utils {
                 return headers;
             }
         };
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
     }
 
     public static void newInstantInfo(final Activity activity, final String url, final JSONObject data) {
