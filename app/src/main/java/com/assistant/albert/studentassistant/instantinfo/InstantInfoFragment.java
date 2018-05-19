@@ -44,6 +44,7 @@ public class InstantInfoFragment extends Fragment {
     private SessionManager session;
     private InstantInfoItem instantInfo;
 
+
     public void getInstantInfo(final String userId, final String url) {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -52,10 +53,19 @@ public class InstantInfoFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            if (Integer.parseInt(response.getString("status")) == 404) {
-                                Toast.makeText(getContext(), "Заполните информацию о себе", Toast.LENGTH_LONG).show();
-                            } else if (Integer.parseInt(response.getString("status")) == 200) {
-                                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                            if (!response.isNull("message")) {
+                                Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                            if (Integer.parseInt(response.getString("status")) == 200) {
+                                JSONObject jsonObject = response.getJSONObject("userInfo");
+                                session.add(SessionManager.KEY_INSTANTINFO, jsonObject.toString());
+                                instantInfo = new InstantInfoItem(
+                                        jsonObject.getString("id"),
+                                        jsonObject.getString("userId"),
+                                        jsonObject.getString("userName"),
+                                        jsonObject.getString("group"),
+                                        jsonObject.getString("startDate")
+                                );
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

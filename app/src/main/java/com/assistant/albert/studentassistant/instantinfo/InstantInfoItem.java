@@ -1,5 +1,6 @@
 package com.assistant.albert.studentassistant.instantinfo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InstantInfoItem {
@@ -7,9 +8,14 @@ public class InstantInfoItem {
     private String userId;
     private String userName;
     private String group;
-    private Date startDate;
+    private String startDate;
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public InstantInfoItem(String id, String userId, String userName, String group, Date startDate) {
+    public InstantInfoItem()
+    {
+    }
+
+    public InstantInfoItem(String id, String userId, String userName, String group, String startDate) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
@@ -33,7 +39,7 @@ public class InstantInfoItem {
         return group;
     }
 
-    public Date StartDate() {
+    public String StartDate() {
         return startDate;
     }
 

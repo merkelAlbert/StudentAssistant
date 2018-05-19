@@ -66,11 +66,11 @@ public class NewHomeworkActivity extends AppCompatActivity {
         if (isEditing) {
             tempId = getIntent().getStringExtra("id");
             String exercise = getIntent().getStringExtra("exercise");
-            String week = getIntent().getStringExtra("week");
+            int week = getIntent().getIntExtra("week",0);
             String subject = getIntent().getStringExtra("subject");
             addSubjectSpinner.setSelection(getIndex(subjects, subject));
             addExercise.setText(exercise);
-            addWeek.setText(week);
+            addWeek.setText(String.valueOf(week));
         }
 
         final String id = tempId;
@@ -87,7 +87,7 @@ public class NewHomeworkActivity extends AppCompatActivity {
                         jsonObject.put("userId", userId);
                         jsonObject.put("subject", addSubjectSpinner.getSelectedItem());
                         jsonObject.put("exercise", addExercise.getText().toString());
-                        jsonObject.put("time", addWeek.getText().toString());
+                        jsonObject.put("week", addWeek.getText().toString());
                         jsonObject.put("passed", false);
                     } catch (JSONException e) {
                         e.printStackTrace();

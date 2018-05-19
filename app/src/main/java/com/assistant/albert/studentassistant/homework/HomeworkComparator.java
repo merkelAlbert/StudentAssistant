@@ -6,8 +6,8 @@ public class HomeworkComparator implements Comparator<HomeworkItem> {
 
     @Override
     public int compare(HomeworkItem homeworkItem, HomeworkItem t1) {
-        if (homeworkItem.Week() > t1.Week()) return 1;
-        else if (homeworkItem.Week() == t1.Week()) return 0;
+        if (homeworkItem.RemainedDays() > t1.RemainedDays()) return 1;
+        else if (homeworkItem.RemainedDays() == t1.RemainedDays()) return 0;
         else return -1;
     }
 }

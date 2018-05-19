@@ -25,11 +25,13 @@ import com.assistant.albert.studentassistant.MainActivity;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.instantinfo.InstantInfoItem;
 import com.assistant.albert.studentassistant.schedule.ClassSchedule;
 import com.assistant.albert.studentassistant.schedule.DaySchedule;
 import com.assistant.albert.studentassistant.schedule.ScheduleDays;
 import com.assistant.albert.studentassistant.schedule.ScheduleItem;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,10 +76,12 @@ public class Utils {
                 button.setVisibility(View.VISIBLE);
                 spinner.setVisibility(View.GONE);
                 try {
-                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         if (activity.getIntent().getStringExtra("isEditing").equals("true")) {
-                            Toast.makeText(activity.getApplicationContext(),response.getString("message"),Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
                             Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             activity.startActivity(i);
@@ -112,8 +116,45 @@ public class Utils {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handleError(activity, error);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
+    public static void newInstantInfo(final Activity activity, final String url, final JSONObject data) {
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+                    if (Integer.parseInt(response.get("status").toString()) == 200) {
+                        Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(i);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -146,7 +187,9 @@ public class Utils {
                 button.setVisibility(View.VISIBLE);
                 spinner.setVisibility(View.GONE);
                 try {
-                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -185,7 +228,9 @@ public class Utils {
                 button.setVisibility(View.VISIBLE);
                 spinner.setVisibility(View.GONE);
                 try {
-                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         activity.onBackPressed();
                     }
@@ -222,7 +267,9 @@ public class Utils {
                 button.setVisibility(View.VISIBLE);
                 spinner.setVisibility(View.GONE);
                 try {
-                    Toast.makeText(activity.getApplicationContext(), response.get("message").toString(), Toast.LENGTH_SHORT).show();
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
                         SessionManager session = new SessionManager(activity.getApplicationContext());
                         session.createLoginSession(data.getString("email"), response.getString("id"));
@@ -276,6 +323,21 @@ public class Utils {
         progressBar.setX(button.getX() + button.getWidth() / 2 - activity.getResources().getDimension(R.dimen.progress_bar_size) / 2);
         progressBar.setY(button.getY());
         button.setVisibility(View.GONE);
+    }
+
+    public static InstantInfoItem getInsatInstantInfoItemFromJson(JSONObject jsonObject) {
+        InstantInfoItem instantInfo = new InstantInfoItem();
+        try {
+            instantInfo = new InstantInfoItem(
+                    jsonObject.getString("id"),
+                    jsonObject.getString("userId"),
+                    jsonObject.getString("userName"),
+                    jsonObject.getString("group"),
+                    jsonObject.getString("startDate"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return instantInfo;
     }
 
     public static ScheduleItem getScheduleFromJson(JSONObject jsonObject) {

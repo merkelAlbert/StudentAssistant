@@ -24,6 +24,7 @@ public class SessionManager {
     public static final String KEY_ID = "Id";
     public static final String KEY_SUBJECTS = "Subjects";
     public static final String KEY_SCHEDULE = "Schedule";
+    public static final String KEY_INSTANTINFO = "InstantInfo";
 
     public SessionManager(Context context) {
         this.context = context;
@@ -39,6 +40,7 @@ public class SessionManager {
 
         editor.putString(KEY_SUBJECTS, null);
         editor.putString(KEY_SCHEDULE, null);
+        editor.putString(KEY_INSTANTINFO, null);
         editor.commit();
     }
 
@@ -64,6 +66,10 @@ public class SessionManager {
         user.put(KEY_EMAIL, preferences.getString(KEY_EMAIL, null));
         user.put(KEY_ID, preferences.getString(KEY_ID, null));
         return user;
+    }
+
+    public String getInstantInfo(){
+        return preferences.getString(KEY_INSTANTINFO,"");
     }
 
     public ArrayList<String> getUserSubjects() {

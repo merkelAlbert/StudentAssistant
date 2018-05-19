@@ -58,6 +58,9 @@ public class ScheduleFragment extends Fragment {
                         scheduleItem = new ScheduleItem();
                         ArrayList<String> subjectsList = new ArrayList<>();
                         try {
+                            if (!response.isNull("message")) {
+                                Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                            }
                             if (Integer.parseInt(response.getString("status")) == 404) {
                                 Snackbar.make(view, "Заполните расписание", Snackbar.LENGTH_INDEFINITE)
                                         .setActionTextColor(getResources().getColor(R.color.colorAccent))

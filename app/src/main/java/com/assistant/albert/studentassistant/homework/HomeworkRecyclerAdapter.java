@@ -92,7 +92,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     editHomework.putExtra("id", holder.id);
                                     editHomework.putExtra("subject", holder.subject.getText());
                                     editHomework.putExtra("exercise", holder.exercise.getText());
-                                    editHomework.putExtra("week", holder.time.getText());
+                                    editHomework.putExtra("week", holder.week);
                                     editHomework.putExtra("editing", true);
                                     view.getContext().startActivity(editHomework);
                                     break;
@@ -126,7 +126,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         if (time > 3 && time < 7) {
             gd.setColor(view.getResources().getColor(R.color.yellowItem));
         }
-        holder.time.setBackground(gd);
+        holder.remainedDays.setBackground(gd);
     }
 
     @Override
@@ -139,11 +139,12 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
     @Override
     public void onBindViewHolder(HomeworkRecyclerAdapter.ViewHolder holder, int position) {
         holder.id = dataSet.get(position).Id();
-        holder.time.setText(Integer.toString(dataSet.get(position).RemainedDays()));
+        holder.remainedDays.setText(Integer.toString(dataSet.get(position).RemainedDays()));
         holder.exercise.setText(dataSet.get(position).Exercise());
         holder.subject.setText(dataSet.get(position).Subject());
         holder.selected = false;
-        setColor(view, holder, Integer.parseInt(holder.time.getText().toString()));
+        holder.week = dataSet.get(position).Week();
+        setColor(view, holder, Integer.parseInt(holder.remainedDays.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor());
 
     }
@@ -163,8 +164,9 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         CardView cardView;
         TextView subject;
         TextView exercise;
-        TextView time;
+        TextView remainedDays;
         String id;
+        int week;
         boolean selected;
 
 
@@ -173,7 +175,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
             cardView = itemView.findViewById(R.id.homeworkCard);
             subject = itemView.findViewById(R.id.subject);
             exercise = itemView.findViewById(R.id.exercise);
-            time = itemView.findViewById(R.id.time);
+            remainedDays = itemView.findViewById(R.id.remainedDays);
         }
     }
 

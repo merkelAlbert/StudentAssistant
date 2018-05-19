@@ -64,22 +64,27 @@ public class HomeworkFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(JSONObject response) {
+
                         spinner.setVisibility(View.GONE);
                         arrayList = new ArrayList<>();
                         try {
-                            if (Integer.parseInt(response.getString("status")) == 404) {
+                            if (!response.isNull("message")) {
                                 Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_LONG).show();
                             }
-                            JSONArray homeworkArray = response.getJSONArray("homework");
-                            for (int i = 0; i < homeworkArray.length(); i++) {
-                                JSONObject jsonObject = homeworkArray.getJSONObject(i);
-                                arrayList.add(new HomeworkItem(
-                                        jsonObject.getString("id"),
-                                        userId,
-                                        jsonObject.getString("subject"),
-                                        jsonObject.getString("exercise"),
-                                        jsonObject.getInt("time"),
-                                        jsonObject.getInt("remainedDays")));
+                            if (response.getInt("status") == 200) {
+                                JSONArray homeworkArray = response.getJSONArray("homework");
+                                JSONArray remainedDaysArray = response.getJSONArray("remainedDays");
+                                for (int i = 0; i < homeworkArray.length(); i++) {
+                                    JSONObject homeworkObject = homeworkArray.getJSONObject(i);
+                                    int remainedDays = remainedDaysArray.getInt(i);
+                                    arrayList.add(new HomeworkItem(
+                                            homeworkObject.getString("id"),
+                                            userId,
+                                            homeworkObject.getString("subject"),
+                                            homeworkObject.getString("exercise"),
+                                            homeworkObject.getInt("week"),
+                                            remainedDays));
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
