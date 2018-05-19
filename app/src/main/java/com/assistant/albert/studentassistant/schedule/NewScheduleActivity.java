@@ -38,18 +38,20 @@ public class NewScheduleActivity extends AppCompatActivity {
         final ProgressBar spinner = findViewById(R.id.progressBar);
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.KEY_ID);
+        final String userId = user.get(SessionManager.USER_ID);
         final String id = getIntent().getStringExtra("id");
         spinner.setVisibility(View.GONE);
-        isEditing = getIntent().getBooleanExtra("isEditing",false);
+        isEditing = getIntent().getBooleanExtra("isEditing", false);
         if (isEditing) {
             ScheduleItem currentSchedule = new ScheduleItem();
-            try {
-                currentSchedule = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (!session.getUSerSchedule().isEmpty()) {
+                try {
+                    currentSchedule = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
+                    setSchedule(container, currentSchedule);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            setSchedule(container, currentSchedule);
         } else {
             saveSchedule(container);
         }

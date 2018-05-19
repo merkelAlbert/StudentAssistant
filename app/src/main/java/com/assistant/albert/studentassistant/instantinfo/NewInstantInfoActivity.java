@@ -18,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,34 +35,37 @@ public class NewInstantInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         session = new SessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-
-        InstantInfoItem instantInfo = new InstantInfoItem();
-        try {
-            instantInfo = Utils.getInsatInstantInfoItemFromJson(new JSONObject(session.getInstantInfo()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        final HashMap<String, String> user = session.getUserDetails();
+        final String userId = user.get(SessionManager.USER_ID);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_instant_info);
-        userName = findViewById(R.id.userName);
-        group = findViewById(R.id.group);
+        userName = findViewById(R.id.addUserName);
+        group = findViewById(R.id.addGroup);
         startDate = findViewById(R.id.startDate);
         submit = findViewById(R.id.submitInstantInfo);
 
+
+        InstantInfoItem instantInfo = new InstantInfoItem();
         Date dateFromStr = new Date();
-        try {
-            dateFromStr = InstantInfoItem.dateFormat.parse(instantInfo.StartDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (!session.getInstantInfo().isEmpty()) {
+            try {
+                instantInfo = Utils.getInstantInfoItemFromJson(new JSONObject(session.getInstantInfo()));
+                try {
+                    dateFromStr = InstantInfoItem.dateFormat.parse(instantInfo.StartDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                userName.setText(instantInfo.UserName());
+                group.setText(instantInfo.Group());
+                startDate.setDate(dateFromStr.getTime());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-
-        userName.setText(instantInfo.UserName());
-        group.setText(instantInfo.Group());
-        startDate.setDate(dateFromStr.getTime());
-
-        final String[] date = {new String(InstantInfoItem.dateFormat.format(startDate.getDate()))};
+        final String[] date = {InstantInfoItem.dateFormat.format(startDate.getDate())};
         startDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
@@ -79,8 +81,9 @@ public class NewInstantInfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), date[0], Toast.LENGTH_SHORT).show();
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("id", finalInstantInfo.Id());
-                    jsonObject.put("userId", finalInstantInfo.UserId());
+                    if (!finalInstantInfo.Id().isEmpty())
+                        jsonObject.put("id", finalInstantInfo.Id());
+                    jsonObject.put("userId", userId);
                     jsonObject.put("userName", userName.getText().toString());
                     jsonObject.put("group", group.getText().toString());
                     jsonObject.put("startDate", date[0]);

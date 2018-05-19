@@ -26,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,6 +99,7 @@ public class HomeworkFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Utils.handleError(getActivity(), error);
                         spinner.setVisibility(View.GONE);
                         reloadButton.setVisibility(View.VISIBLE);
                         reloadButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +121,7 @@ public class HomeworkFragment extends Fragment {
                              Bundle savedInstanceState) {
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.KEY_ID);
+        final String userId = user.get(SessionManager.USER_ID);
 
         view = inflater.inflate(R.layout.fragment_homework, container, false);
         recyclerView = view.findViewById(R.id.homeworkRecycler);

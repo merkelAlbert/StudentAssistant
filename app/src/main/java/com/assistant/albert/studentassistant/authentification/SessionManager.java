@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.assistant.albert.studentassistant.authentification.LoginActivity;
-import com.assistant.albert.studentassistant.schedule.ScheduleItem;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +18,7 @@ public class SessionManager {
     private static final String PREF_NAME = "StudentAssistant";
     private static final String IS_LOGIN = "IsLoggedIn";
     public static final String KEY_EMAIL = "Email";
-    public static final String KEY_ID = "Id";
+    public static final String USER_ID = "UserId";
     public static final String KEY_SUBJECTS = "Subjects";
     public static final String KEY_SCHEDULE = "Schedule";
     public static final String KEY_INSTANTINFO = "InstantInfo";
@@ -33,10 +30,10 @@ public class SessionManager {
         editor.apply();
     }
 
-    public void createLoginSession(String email, String id) {
+    public void createLoginSession(String email, String userId) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_EMAIL, email);
-        editor.putString(KEY_ID, id);
+        editor.putString(USER_ID, userId);
 
         editor.putString(KEY_SUBJECTS, null);
         editor.putString(KEY_SCHEDULE, null);
@@ -64,7 +61,7 @@ public class SessionManager {
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         user.put(KEY_EMAIL, preferences.getString(KEY_EMAIL, null));
-        user.put(KEY_ID, preferences.getString(KEY_ID, null));
+        user.put(USER_ID, preferences.getString(USER_ID, null));
         return user;
     }
 

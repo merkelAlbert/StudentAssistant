@@ -45,8 +45,6 @@ public class ScheduleFragment extends Fragment {
     private SessionManager session;
 
     public void getSchedule(final String userId, final String url) {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -77,7 +75,7 @@ public class ScheduleFragment extends Fragment {
                                     subjectsList.add(subjects.getString(i));
                                 }
                                 scheduleItem = Utils.getScheduleFromJson(response.getJSONObject("schedule"));
-                                session.add(SessionManager.KEY_SCHEDULE,response.getJSONObject("schedule").toString());
+                                session.add(SessionManager.KEY_SCHEDULE, response.getJSONObject("schedule").toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -91,17 +89,28 @@ public class ScheduleFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        spinner.setVisibility(View.GONE);
-
-                        reloadButton.setVisibility(View.VISIBLE);
-                        reloadButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                reloadButton.setVisibility(View.GONE);
-                                spinner.setVisibility(View.VISIBLE);
-                                getSchedule(userId, url);
+                        Utils.handleError(getActivity(), error);
+                        if (!session.getUSerSchedule().isEmpty()) {
+                            spinner.setVisibility(View.GONE);
+                            try {
+                                scheduleItem = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });
+                            RecyclerView.Adapter adapter = new ScheduleRecyclerAdapter(scheduleItem);
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            spinner.setVisibility(View.GONE);
+                            reloadButton.setVisibility(View.VISIBLE);
+                            reloadButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    reloadButton.setVisibility(View.GONE);
+                                    spinner.setVisibility(View.VISIBLE);
+                                    getSchedule(userId, url);
+                                }
+                            });
+                        }
                     }
                 }
         );
@@ -115,7 +124,7 @@ public class ScheduleFragment extends Fragment {
 
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.KEY_ID);
+        final String userId = user.get(SessionManager.USER_ID);
 
         view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
@@ -125,7 +134,16 @@ public class ScheduleFragment extends Fragment {
         scheduleSwipeRefreshLayout = view.findViewById(R.id.scheduleSwipeRefreshLayout);
 
         reloadButton.setVisibility(View.GONE);
-        spinner.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.GONE);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        if (scheduleItem == null) {
+            spinner.setVisibility(View.VISIBLE);
+            getSchedule(userId, Urls.schedule);
+        }
 
         scheduleSwipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
 
@@ -144,8 +162,6 @@ public class ScheduleFragment extends Fragment {
                 });
             }
         });
-        if (scheduleItem == null)
-            this.getSchedule(userId, Urls.schedule);
         return view;
     }
 

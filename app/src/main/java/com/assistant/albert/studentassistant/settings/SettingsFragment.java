@@ -1,14 +1,14 @@
 package com.assistant.albert.studentassistant.settings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
 
@@ -18,7 +18,6 @@ import com.assistant.albert.studentassistant.schedule.NewScheduleActivity;
 import com.assistant.albert.studentassistant.schedule.ScheduleItem;
 import com.assistant.albert.studentassistant.utils.Utils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,12 +33,12 @@ public class SettingsFragment extends Fragment {
     private Button changeInstantInfoButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.KEY_ID);
+        final String userId = user.get(SessionManager.USER_ID);
 
         ScheduleItem schedule = new ScheduleItem();
         try {
@@ -72,10 +71,25 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                session.logoutUser();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.exit_question);
+                builder.setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        session.logoutUser();
+                    }
+                });
+                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
             }
         });
 

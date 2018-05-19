@@ -80,12 +80,10 @@ public class Utils {
                         Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
                     }
                     if (Integer.parseInt(response.get("status").toString()) == 200) {
-                        if (activity.getIntent().getStringExtra("isEditing").equals("true")) {
-                            Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            activity.startActivity(i);
-                        }
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(i);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -275,7 +273,6 @@ public class Utils {
                         session.createLoginSession(data.getString("email"), response.getString("id"));
                         Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         activity.startActivity(i);
                         activity.finish();
                     }
@@ -325,15 +322,19 @@ public class Utils {
         button.setVisibility(View.GONE);
     }
 
-    public static InstantInfoItem getInsatInstantInfoItemFromJson(JSONObject jsonObject) {
+    public static InstantInfoItem getInstantInfoItemFromJson(JSONObject jsonObject) {
         InstantInfoItem instantInfo = new InstantInfoItem();
+
         try {
+            JSONObject iiJson = jsonObject.getJSONObject("userInfo");
             instantInfo = new InstantInfoItem(
-                    jsonObject.getString("id"),
-                    jsonObject.getString("userId"),
-                    jsonObject.getString("userName"),
-                    jsonObject.getString("group"),
-                    jsonObject.getString("startDate"));
+                    iiJson.getString("id"),
+                    iiJson.getString("userId"),
+                    iiJson.getString("userName"),
+                    iiJson.getString("group"),
+                    iiJson.getString("startDate"),
+                    jsonObject.getInt("currentWeek"),
+                    jsonObject.getInt("totalHomework"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,21 +1,13 @@
 package com.assistant.albert.studentassistant.instantinfo;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,11 +21,9 @@ import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
 import com.assistant.albert.studentassistant.utils.Utils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -43,6 +33,10 @@ public class InstantInfoFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private SessionManager session;
     private InstantInfoItem instantInfo;
+    private TextView currentWeek;
+    private TextView userName;
+    private TextView group;
+    private TextView totalHomework;
 
 
     public void getInstantInfo(final String userId, final String url) {
@@ -58,14 +52,23 @@ public class InstantInfoFragment extends Fragment {
                             }
                             if (Integer.parseInt(response.getString("status")) == 200) {
                                 JSONObject jsonObject = response.getJSONObject("userInfo");
-                                session.add(SessionManager.KEY_INSTANTINFO, jsonObject.toString());
+
                                 instantInfo = new InstantInfoItem(
                                         jsonObject.getString("id"),
                                         jsonObject.getString("userId"),
                                         jsonObject.getString("userName"),
                                         jsonObject.getString("group"),
-                                        jsonObject.getString("startDate")
+                                        jsonObject.getString("startDate"),
+                                        response.getInt("currentWeek"),
+                                        response.getInt("totalHomework")
                                 );
+                                session.add(SessionManager.KEY_INSTANTINFO, response.toString());
+                                String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
+                                String totalHomeworkStr = "Всего ДЗ: " + String.valueOf(instantInfo.TotalHomework());
+                                currentWeek.setText(weekStr);
+                                userName.setText(instantInfo.UserName());
+                                group.setText(instantInfo.Group());
+                                totalHomework.setText(totalHomeworkStr);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -77,6 +80,20 @@ public class InstantInfoFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        if (!session.getInstantInfo().isEmpty()) {
+                            try {
+                                instantInfo = Utils.getInstantInfoItemFromJson(new JSONObject(session.getInstantInfo()));
+                                String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
+                                String totalHomeworkStr = "Всего ДЗ: " + String.valueOf(instantInfo.TotalHomework());
+                                currentWeek.setText(weekStr);
+                                userName.setText(instantInfo.UserName());
+                                group.setText(instantInfo.Group());
+                                totalHomework.setText(totalHomeworkStr);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         Utils.handleError(getActivity(), error);
                     }
                 }
@@ -87,12 +104,17 @@ public class InstantInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         session = new SessionManager(getContext());
         HashMap<String, String> user = session.getUserDetails();
-        final String userId = user.get(SessionManager.KEY_ID);
+        final String userId = user.get(SessionManager.USER_ID);
 
         view = inflater.inflate(R.layout.fragment_instant_info, container, false);
+        currentWeek = view.findViewById(R.id.currentWeek);
+        userName = view.findViewById(R.id.userName);
+        group = view.findViewById(R.id.group);
+        totalHomework = view.findViewById(R.id.totalHomework);
+
+
         swipeRefreshLayout = view.findViewById(R.id.instantInfoContainer);
 
         swipeRefreshLayout.setColorSchemeColors(view.getResources().getColor(R.color.colorPrimary));
@@ -111,10 +133,9 @@ public class InstantInfoFragment extends Fragment {
                 });
             }
         });
-
-        if (instantInfo == null)
+        if (instantInfo == null) {
             getInstantInfo(userId, Urls.instantInfo);
-
+        }
         return view;
     }
 }

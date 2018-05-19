@@ -14,13 +14,15 @@ import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecyclerAdapter.ViewHolder> {
 
     private final boolean[] firstCardSelected = {false};
-    private int selectedCounter;
     private ArrayList<HomeworkItem> dataSet;
+    private ArrayList<HomeworkRecyclerAdapter.ViewHolder> selectedHomework;
     private View view;
 
     private final int EDIT = 0;
@@ -29,11 +31,11 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
 
     public HomeworkRecyclerAdapter(ArrayList<HomeworkItem> dataSet) {
         this.dataSet = dataSet;
-        this.selectedCounter = 0;
+        this.selectedHomework = new ArrayList<>();
     }
 
 
-    private void passHomework(ViewHolder holder){
+    private void passHomework(ViewHolder holder) {
 
     }
 
@@ -41,10 +43,10 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (selectedCounter == 0) {
+                if (selectedHomework.size() == 0) {
                     holder.cardView.setCardBackgroundColor(view.getResources().getColor(R.color.selectedItem));
                     holder.selected = true;
-                    selectedCounter++;
+                    selectedHomework.add(holder);
                     firstCardSelected[0] = true;
                 } else if (holder.selected) {
                     holder.cardView.showContextMenu();
@@ -56,14 +58,14 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
             @Override
             public void onClick(View view) {
                 if (firstCardSelected[0]) {
-                    if (selectedCounter > 0) {
+                    if (selectedHomework.size() > 0) {
                         if (!holder.selected) {
                             holder.selected = true;
-                            selectedCounter++;
+                            selectedHomework.add(holder);
                             holder.cardView.setCardBackgroundColor(view.getResources().getColor(R.color.selectedItem));
                         } else {
                             holder.selected = false;
-                            selectedCounter--;
+                            selectedHomework.remove(holder);
                             holder.cardView.setCardBackgroundColor(color);
                         }
                     } else {
@@ -79,7 +81,8 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
             public void onCreateContextMenu(ContextMenu menu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                 menu.setHeaderTitle("Домашнее задание");
                 menu.add(0, PASSED, 0, "Сдано");
-                menu.add(0, EDIT, 1, "Изменить");//groupId, itemId, order, title
+                if (selectedHomework.size() == 0 || selectedHomework.size() == 1)
+                    menu.add(0, EDIT, 1, "Изменить");//groupId, itemId, order, title
                 menu.add(0, DELETE, 2, "Удалить");
 
                 for (int i = 0; i < menu.size(); i++) {
@@ -98,6 +101,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     break;
                                 }
                                 case PASSED: {
+                                    JSONObject jsonObject = new JSONObject();
 
                                     break;
                                 }

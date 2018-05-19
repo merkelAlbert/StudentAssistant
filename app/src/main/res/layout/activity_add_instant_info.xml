@@ -8,7 +8,7 @@
     tools:context=".instantinfo.NewInstantInfoActivity">
 
     <EditText
-        android:id="@+id/userName"
+        android:id="@+id/addUserName"
         style="@style/EditTextStyle"
         android:inputType="textPersonName"
         android:hint="ФИО"
@@ -16,11 +16,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/group"
+        android:id="@+id/addGroup"
         style="@style/EditTextStyle"
         android:layout_marginTop="0dp"
         android:hint="Группа"
-        app:layout_constraintTop_toBottomOf="@id/userName" />
+        app:layout_constraintTop_toBottomOf="@id/addUserName" />
 
     <TextView
         android:id="@+id/startDateTextView"
@@ -30,7 +30,7 @@
         android:text="Дата начала учебы"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/group" />
+        app:layout_constraintTop_toBottomOf="@id/addGroup" />
 
     <CalendarView
         android:id="@+id/startDate"
