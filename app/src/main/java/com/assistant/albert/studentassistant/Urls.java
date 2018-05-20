@@ -13,4 +13,5 @@ public class Urls {
     public static String instantInfo = root + "userInfo/";
     public static String changeSchedule = root + "changeSchedule/";
     public static String changeInstantInfo = root + "changeUser/";
+    public static String deleteHomework = root + "deleteHomework/";
 }

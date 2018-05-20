@@ -51,8 +51,8 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (password.getText().toString().trim().isEmpty() ||
-                        repeatPassword.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty()) {
+                if (password.getText().toString().isEmpty() ||
+                        repeatPassword.getText().toString().isEmpty() || email.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Заполните все поля!!!", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -63,14 +63,14 @@ public class RegistrationActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (!password.getText().toString().equals(repeatPassword.getText().toString().trim())) {
+                if (!password.getText().toString().equals(repeatPassword.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Пароли не совпадают!!!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("email", email.getText().toString().trim());
-                    jsonObject.put("password", Utils.md5(password.getText().toString().trim()));
+                    jsonObject.put("password", Utils.md5(password.getText().toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

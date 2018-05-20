@@ -152,6 +152,50 @@ public class Utils {
         queue.add(jsonArrayRequest);
     }
 
+
+
+    public static void deleteHomework(final Context context, final String url,
+                                    final JSONArray data, final ArrayList<HomeworkItem> all,
+                                    final ArrayList<HomeworkItem> passed,
+                                    final boolean[] firstCardSelected,
+                                    final HomeworkRecyclerAdapter adapter) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    if (!response.getJSONObject(0).isNull("message")) {
+                        Toast.makeText(context, response.getJSONObject(0).getString("message"), Toast.LENGTH_LONG).show();
+                    }
+                    if (Integer.parseInt(response.getJSONObject(0).get("status").toString()) == 200) {
+                        firstCardSelected[0] = false;
+                        all.removeAll(passed);
+                        adapter.setData(all);
+                        passed.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handleError((Activity) context, error);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        queue.add(jsonArrayRequest);
+    }
+
+
     public static void newInstantInfo(final Activity activity, final String url, final JSONObject data) {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,

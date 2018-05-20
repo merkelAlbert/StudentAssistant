@@ -78,7 +78,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                             holder.cardView.setCardBackgroundColor(view.getResources().getColor(R.color.selectedItem));
                         } else {
                             holder.selected = false;
-                            selectedHomework.remove(holder);
+                            selectedHomework.remove(dataSet.get(position));
                             holder.cardView.setCardBackgroundColor(color);
                         }
                     } else {
@@ -137,15 +137,28 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
 
                                             jsonArray.put(i, jsonObject);
                                         }
-                                        Utils.passHomework(view.getContext(), Urls.passHomework,
-                                                jsonArray, dataSet, temp,firstCardSelected, adapter);
+                                        if (selectedHomework.size() > 0)
+                                            Utils.passHomework(view.getContext(), Urls.passHomework,
+                                                    jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
+                                        else
+                                            Utils.passHomework(view.getContext(), Urls.passHomework,
+                                                    jsonArray, dataSet, temp, firstCardSelected, adapter);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     break;
                                 }
                                 case DELETE: {
-                                    Toast.makeText(view.getContext(), "d", Toast.LENGTH_LONG).show();
+                                    JSONArray jsonArray = new JSONArray();
+                                    try {
+                                        for (int i = 0; i < temp.size(); i++) {
+                                            jsonArray.put(i, temp.get(i).Id());
+                                        }
+                                        Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
+                                                jsonArray, dataSet, temp, firstCardSelected, adapter);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                                 }
                             }
@@ -188,6 +201,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.week = dataSet.get(position).Week();
         setColor(view, holder, Integer.parseInt(holder.remainedDays.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor(), position);
+        holder.cardView.setCardBackgroundColor(view.getResources().getColor(R.color.white));
     }
 
     @Override
