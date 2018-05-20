@@ -37,7 +37,19 @@ public class InstantInfoFragment extends Fragment {
     private TextView userName;
     private TextView group;
     private TextView totalHomework;
+    private TextView totalPassed;
 
+
+    private void fillInstantInfo(InstantInfoItem instantInfo){
+        String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
+        String totalHomeworkStr = "Текущих ДЗ: " + String.valueOf(instantInfo.TotalHomework());
+        String totalPassedStr = "Сдано ДЗ с начала учебы: " + String.valueOf(instantInfo.TotalPassed());
+        currentWeek.setText(weekStr);
+        userName.setText(instantInfo.UserName());
+        group.setText(instantInfo.Group());
+        totalHomework.setText(totalHomeworkStr);
+        totalPassed.setText(totalPassedStr);
+    }
 
     public void getInstantInfo(final String userId, final String url) {
 
@@ -60,15 +72,11 @@ public class InstantInfoFragment extends Fragment {
                                         jsonObject.getString("group"),
                                         jsonObject.getString("startDate"),
                                         response.getInt("currentWeek"),
-                                        response.getInt("totalHomework")
+                                        response.getInt("totalHomework"),
+                                        response.getInt("totalPassed")
                                 );
                                 session.add(SessionManager.KEY_INSTANT_INFO, response.toString());
-                                String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
-                                String totalHomeworkStr = "Всего ДЗ: " + String.valueOf(instantInfo.TotalHomework());
-                                currentWeek.setText(weekStr);
-                                userName.setText(instantInfo.UserName());
-                                group.setText(instantInfo.Group());
-                                totalHomework.setText(totalHomeworkStr);
+                               fillInstantInfo(instantInfo);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -83,12 +91,7 @@ public class InstantInfoFragment extends Fragment {
                         if (!session.getInstantInfo().isEmpty()) {
                             try {
                                 instantInfo = Utils.getInstantInfoItemFromJson(new JSONObject(session.getInstantInfo()));
-                                String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
-                                String totalHomeworkStr = "Всего ДЗ: " + String.valueOf(instantInfo.TotalHomework());
-                                currentWeek.setText(weekStr);
-                                userName.setText(instantInfo.UserName());
-                                group.setText(instantInfo.Group());
-                                totalHomework.setText(totalHomeworkStr);
+                                fillInstantInfo(instantInfo);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -113,6 +116,7 @@ public class InstantInfoFragment extends Fragment {
         userName = view.findViewById(R.id.userName);
         group = view.findViewById(R.id.group);
         totalHomework = view.findViewById(R.id.totalHomework);
+        totalPassed = view.findViewById(R.id.totalPassed);
 
 
         swipeRefreshLayout = view.findViewById(R.id.instantInfoContainer);

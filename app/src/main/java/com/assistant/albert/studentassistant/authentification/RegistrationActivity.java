@@ -51,26 +51,26 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (password.getText().toString().isEmpty() ||
-                        repeatPassword.getText().toString().isEmpty() || email.getText().toString().isEmpty()) {
+                if (password.getText().toString().trim().isEmpty() ||
+                        repeatPassword.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Заполните все поля!!!", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                Matcher matcher = Patterns.EMAIL_ADDRESS.matcher(email.getText().toString());
+                Matcher matcher = Patterns.EMAIL_ADDRESS.matcher(email.getText().toString().trim());
                 if (!matcher.matches()) {
                     Toast.makeText(getApplicationContext(), "Введите корректный email!!!", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                if (!password.getText().toString().equals(repeatPassword.getText().toString())) {
+                if (!password.getText().toString().equals(repeatPassword.getText().toString().trim())) {
                     Toast.makeText(getApplicationContext(), "Пароли не совпадают!!!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("email", email.getText().toString());
-                    jsonObject.put("password", Utils.md5(password.getText().toString()));
+                    jsonObject.put("email", email.getText().toString().trim());
+                    jsonObject.put("password", Utils.md5(password.getText().toString().trim()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

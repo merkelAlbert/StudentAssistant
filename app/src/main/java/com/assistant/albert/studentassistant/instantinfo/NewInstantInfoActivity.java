@@ -78,7 +78,6 @@ public class NewInstantInfoActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), date[0], Toast.LENGTH_SHORT).show();
                 JSONObject jsonObject = new JSONObject();
                 try {
                     if (!finalInstantInfo.Id().isEmpty())

@@ -11,6 +11,7 @@ public class InstantInfoItem {
     private String startDate;
     private int currentWeek;
     private int totalHomework;
+    private int totalPassed;
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public InstantInfoItem() {
@@ -21,11 +22,12 @@ public class InstantInfoItem {
         startDate = "";
         currentWeek = 0;
         totalHomework = 0;
+        totalPassed = 0;
 
     }
 
     public InstantInfoItem(String id, String userId, String userName, String group,
-                           String startDate, int currentWeek, int totalHomework) {
+                           String startDate, int currentWeek, int totalHomework, int totalPassed) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
@@ -33,6 +35,7 @@ public class InstantInfoItem {
         this.startDate = startDate;
         this.currentWeek = currentWeek;
         this.totalHomework = totalHomework;
+        this.totalPassed = totalPassed;
     }
 
     public String Id() {
@@ -58,8 +61,13 @@ public class InstantInfoItem {
     public int CurrentWeek() {
         return currentWeek;
     }
+
     public int TotalHomework() {
         return totalHomework;
+    }
+
+    public int TotalPassed() {
+        return totalPassed;
     }
 
 

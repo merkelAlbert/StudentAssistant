@@ -52,6 +52,17 @@
             android:id="@+id/totalHomework"
             style="@style/InstantInfoItemStyle"
             android:width="15dp"
-            android:text="week" />
+            android:text="Всего ДЗ" />
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        style="@style/CardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/totalPassed"
+            style="@style/InstantInfoItemStyle"
+            android:width="15dp"
+            android:text="Сдано за семестр" />
     </android.support.v7.widget.CardView>
 </LinearLayout>

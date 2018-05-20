@@ -27,6 +27,8 @@ import com.assistant.albert.studentassistant.MainActivity;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.homework.HomeworkItem;
+import com.assistant.albert.studentassistant.homework.HomeworkRecyclerAdapter;
 import com.assistant.albert.studentassistant.instantinfo.InstantInfoItem;
 import com.assistant.albert.studentassistant.schedule.ClassSchedule;
 import com.assistant.albert.studentassistant.schedule.DaySchedule;
@@ -41,6 +43,7 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,7 +112,11 @@ public class Utils {
         queue.add(jsonObjectRequest);
     }
 
-    public static void passHomework(final Context context, final String url, final JSONArray data) {
+    public static void passHomework(final Context context, final String url,
+                                    final JSONArray data, final ArrayList<HomeworkItem> all,
+                                    final ArrayList<HomeworkItem> passed,
+                                    final boolean[] firstCardSelected,
+                                    final HomeworkRecyclerAdapter adapter) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url,
                 data, new Response.Listener<JSONArray>() {
@@ -120,6 +127,10 @@ public class Utils {
                         Toast.makeText(context, response.getJSONObject(0).getString("message"), Toast.LENGTH_LONG).show();
                     }
                     if (Integer.parseInt(response.getJSONObject(0).get("status").toString()) == 200) {
+                        firstCardSelected[0] = false;
+                        all.removeAll(passed);
+                        adapter.setData(all);
+                        adapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -336,7 +347,8 @@ public class Utils {
                     iiJson.getString("group"),
                     iiJson.getString("startDate"),
                     jsonObject.getInt("currentWeek"),
-                    jsonObject.getInt("totalHomework"));
+                    jsonObject.getInt("totalHomework"),
+                    jsonObject.getInt("totalPassed"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
