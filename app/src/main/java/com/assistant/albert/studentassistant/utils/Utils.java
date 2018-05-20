@@ -130,6 +130,7 @@ public class Utils {
                         firstCardSelected[0] = false;
                         all.removeAll(passed);
                         adapter.setData(all);
+                        passed.clear();
                         adapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
@@ -156,7 +157,7 @@ public class Utils {
 
     public static void deleteHomework(final Context context, final String url,
                                     final JSONArray data, final ArrayList<HomeworkItem> all,
-                                    final ArrayList<HomeworkItem> passed,
+                                    final ArrayList<HomeworkItem> deleted,
                                     final boolean[] firstCardSelected,
                                     final HomeworkRecyclerAdapter adapter) {
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -170,9 +171,9 @@ public class Utils {
                     }
                     if (Integer.parseInt(response.getJSONObject(0).get("status").toString()) == 200) {
                         firstCardSelected[0] = false;
-                        all.removeAll(passed);
+                        all.removeAll(deleted);
                         adapter.setData(all);
-                        passed.clear();
+                        deleted.clear();
                         adapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {

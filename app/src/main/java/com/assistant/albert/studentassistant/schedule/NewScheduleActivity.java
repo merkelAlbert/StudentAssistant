@@ -39,14 +39,13 @@ public class NewScheduleActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         final String userId = user.get(SessionManager.KEY_USER_ID);
-        final String id = getIntent().getStringExtra("id");
         spinner.setVisibility(View.GONE);
         isEditing = getIntent().getBooleanExtra("isEditing", false);
         if (isEditing) {
             ScheduleItem currentSchedule = new ScheduleItem();
-            if (!session.getUSerSchedule().isEmpty()) {
+            if (!session.getUserSchedule().isEmpty()) {
                 try {
-                    currentSchedule = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
+                    currentSchedule = Utils.getScheduleFromJson(new JSONObject(session.getUserSchedule()));
                     setSchedule(container, currentSchedule);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -80,7 +79,7 @@ public class NewScheduleActivity extends AppCompatActivity {
                         scheduleArray.put(dayArray);
                     }
                     if (isEditing)
-                        jsonObject.put("id", id);
+                        jsonObject.put("id", Utils.getScheduleFromJson(new JSONObject(session.getUserSchedule())).Id());
                     jsonObject.put("schedule", scheduleArray);
                     jsonObject.put("userId", userId);
                 } catch (JSONException e) {

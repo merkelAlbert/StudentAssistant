@@ -73,7 +73,7 @@ public class SessionManager {
         return new ArrayList<>(preferences.getStringSet(KEY_SUBJECTS, new HashSet<String>()));
     }
 
-    public String getUSerSchedule(){
+    public String getUserSchedule(){
         return preferences.getString(KEY_SCHEDULE,"");
     }
 

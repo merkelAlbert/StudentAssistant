@@ -90,10 +90,10 @@ public class ScheduleFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Utils.handleError(getActivity(), error);
-                        if (!session.getUSerSchedule().isEmpty()) {
+                        if (!session.getUserSchedule().isEmpty()) {
                             spinner.setVisibility(View.GONE);
                             try {
-                                scheduleItem = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
+                                scheduleItem = Utils.getScheduleFromJson(new JSONObject(session.getUserSchedule()));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

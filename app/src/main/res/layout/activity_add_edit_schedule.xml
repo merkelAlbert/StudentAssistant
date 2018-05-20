@@ -27,9 +27,6 @@
             android:padding="10dp"
             android:text="Подтвердить"
             android:textColor="@color/white" />
-        <include layout="@layout/progress_bar"
-            android:layout_height="@dimen/progress_bar_size"
-            android:layout_width="@dimen/progress_bar_size"
-            android:layout_gravity="center_horizontal"/>
+        <include layout="@layout/progress_bar" />
     </LinearLayout>
 </ScrollView>

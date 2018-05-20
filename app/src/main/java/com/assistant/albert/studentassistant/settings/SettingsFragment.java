@@ -41,24 +41,29 @@ public class SettingsFragment extends Fragment {
         final String userId = user.get(SessionManager.KEY_USER_ID);
 
         ScheduleItem schedule = new ScheduleItem();
-        try {
-            schedule = Utils.getScheduleFromJson(new JSONObject(session.getUSerSchedule()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
+        if (!session.getUserSchedule().isEmpty()) {
+            try {
+                schedule = Utils.getScheduleFromJson(new JSONObject(session.getUserSchedule()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        final ScheduleItem finalSchedule = schedule;
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         exitButton = view.findViewById(R.id.exitButton);
         changeScheduleButton = view.findViewById(R.id.changeScheduleButton);
         changeInstantInfoButton = view.findViewById(R.id.changeInstantInfoButton);
 
-        final ScheduleItem finalSchedule = schedule;
         changeScheduleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getContext(), NewScheduleActivity.class);
-                i.putExtra("isEditing",true);
-                i.putExtra("id", finalSchedule.Id());
+                if (!session.getUserSchedule().isEmpty()) {
+                    i.putExtra("isEditing", true);
+                    i.putExtra("id", finalSchedule.Id());
+                } else
+                    i.putExtra("isEditing", false);
                 startActivity(i);
             }
         });

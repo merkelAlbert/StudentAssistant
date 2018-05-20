@@ -154,8 +154,12 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                         for (int i = 0; i < temp.size(); i++) {
                                             jsonArray.put(i, temp.get(i).Id());
                                         }
-                                        Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
-                                                jsonArray, dataSet, temp, firstCardSelected, adapter);
+                                        if (selectedHomework.size() > 0)
+                                            Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
+                                                    jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
+                                        else
+                                            Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
+                                                    jsonArray, dataSet, temp, firstCardSelected, adapter);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
