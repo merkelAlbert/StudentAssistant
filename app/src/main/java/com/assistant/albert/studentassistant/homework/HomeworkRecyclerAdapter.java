@@ -1,9 +1,10 @@
 package com.assistant.albert.studentassistant.homework;
 
-import android.app.Activity;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.provider.SyncStateContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -12,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecyclerAdapter.ViewHolder> {
 
@@ -94,15 +93,18 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.cardView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                final ArrayList<HomeworkItem> temp = new ArrayList<>();
-                temp.addAll(selectedHomework);
-                if (selectedHomework.size() == 1)
+                final ArrayList<HomeworkItem> temp = new ArrayList<>(selectedHomework);
+                if (selectedHomework.size() == 1) {
                     selectedHomework.clear();
-                menu.setHeaderTitle("Домашнее задание");
+                    menu.setHeaderTitle(holder.subject.getText().toString());
+                } else {
+                    menu.setHeaderTitle("Домашние задания");
+                }
                 menu.add(0, PASSED, 0, "Сдано");
                 if (selectedHomework.size() == 0 || selectedHomework.size() == 1)
                     menu.add(0, EDIT, 1, "Изменить");//groupId, itemId, order, title
                 menu.add(0, DELETE, 2, "Удалить");
+
                 for (int i = 0; i < menu.size(); i++) {
                     menu.getItem(i).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 
@@ -120,49 +122,77 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     break;
                                 }
                                 case PASSED: {
-                                    session = new SessionManager(view.getContext());
-                                    HashMap<String, String> user = session.getUserDetails();
-                                    final String userId = user.get(SessionManager.KEY_USER_ID);
-                                    JSONArray jsonArray = new JSONArray();
-                                    try {
-                                        for (int i = 0; i < temp.size(); i++) {
-                                            JSONObject jsonObject = new JSONObject();
-                                            jsonObject.put("id", temp.get(i).Id());
-                                            jsonObject.put("userId", userId);
-                                            jsonObject.put("subject", temp.get(i).Subject());
-                                            jsonObject.put("exercise", temp.get(i).Exercise());
-                                            jsonObject.put("week", temp.get(i).Week());
-                                            jsonObject.put("remainedDays", temp.get(i).RemainedDays());
-                                            jsonObject.put("passed", true);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                    builder.setTitle(R.string.pass_question);
+                                    builder.setPositiveButton("Сдать", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int j) {
+                                            session = new SessionManager(view.getContext());
+                                            HashMap<String, String> user = session.getUserDetails();
+                                            final String userId = user.get(SessionManager.KEY_USER_ID);
+                                            JSONArray jsonArray = new JSONArray();
+                                            try {
+                                                for (int i = 0; i < temp.size(); i++) {
+                                                    JSONObject jsonObject = new JSONObject();
+                                                    jsonObject.put("id", temp.get(i).Id());
+                                                    jsonObject.put("userId", userId);
+                                                    jsonObject.put("subject", temp.get(i).Subject());
+                                                    jsonObject.put("exercise", temp.get(i).Exercise());
+                                                    jsonObject.put("week", temp.get(i).Week());
+                                                    jsonObject.put("remainedDays", temp.get(i).RemainedDays());
+                                                    jsonObject.put("passed", true);
 
-                                            jsonArray.put(i, jsonObject);
+                                                    jsonArray.put(i, jsonObject);
+                                                }
+                                                if (selectedHomework.size() > 0)
+                                                    Utils.passHomework(view.getContext(), Urls.passHomework,
+                                                            jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
+                                                else
+                                                    Utils.passHomework(view.getContext(), Urls.passHomework,
+                                                            jsonArray, dataSet, temp, firstCardSelected, adapter);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                        if (selectedHomework.size() > 0)
-                                            Utils.passHomework(view.getContext(), Urls.passHomework,
-                                                    jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
-                                        else
-                                            Utils.passHomework(view.getContext(), Urls.passHomework,
-                                                    jsonArray, dataSet, temp, firstCardSelected, adapter);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    });
+                                    builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
+                                    builder.show();
                                     break;
                                 }
                                 case DELETE: {
-                                    JSONArray jsonArray = new JSONArray();
-                                    try {
-                                        for (int i = 0; i < temp.size(); i++) {
-                                            jsonArray.put(i, temp.get(i).Id());
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                    builder.setTitle(R.string.delete_homework_question);
+                                    builder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int j) {
+                                            JSONArray jsonArray = new JSONArray();
+                                            try {
+                                                for (int i = 0; i < temp.size(); i++) {
+                                                    jsonArray.put(i, temp.get(i).Id());
+                                                }
+                                                if (selectedHomework.size() > 0)
+                                                    Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
+                                                            jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
+                                                else
+                                                    Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
+                                                            jsonArray, dataSet, temp, firstCardSelected, adapter);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                        if (selectedHomework.size() > 0)
-                                            Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
-                                                    jsonArray, dataSet, selectedHomework, firstCardSelected, adapter);
-                                        else
-                                            Utils.deleteHomework(view.getContext(), Urls.deleteHomework,
-                                                    jsonArray, dataSet, temp, firstCardSelected, adapter);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                                    });
+                                    builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    });
+                                    builder.show();
                                     break;
                                 }
                             }
@@ -201,7 +231,6 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.remainedDays.setText(String.valueOf(dataSet.get(position).RemainedDays()));
         holder.exercise.setText(dataSet.get(position).Exercise());
         holder.subject.setText(dataSet.get(position).Subject());
-        holder.selected = false;
         holder.week = dataSet.get(position).Week();
         setColor(view, holder, Integer.parseInt(holder.remainedDays.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor(), position);
@@ -235,6 +264,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
             subject = itemView.findViewById(R.id.subject);
             exercise = itemView.findViewById(R.id.exercise);
             remainedDays = itemView.findViewById(R.id.remainedDays);
+            selected = false;
         }
     }
 

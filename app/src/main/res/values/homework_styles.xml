@@ -3,7 +3,7 @@
 
     <style name="HomeworkContainerStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">90dp</item>
+        <item name="android:layout_height">80dp</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
     </style>
@@ -23,13 +23,15 @@
     </style>
 
     <style name="CardTimeStyle">
-        <item name="android:layout_width">37dp</item>
-        <item name="android:layout_height">37dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/card_time_circle</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>
