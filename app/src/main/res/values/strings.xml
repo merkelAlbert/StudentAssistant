@@ -10,5 +10,7 @@
     <string name="title_activity_new_homework">NewHomewokActivity</string>
     <string name="title_activity_edit_homework">EditHomeworkActivity</string>
     <string name="exit_question">Выйти из приложения?</string>
+    <string name="pass_question">Сдать ДЗ?</string>
+    <string name="delete_homework_question">Удалить ДЗ?</string>
 
 </resources>
