@@ -197,12 +197,16 @@ public class Utils {
     }
 
 
-    public static void newInstantInfo(final Activity activity, final String url, final JSONObject data) {
+    public static void newInstantInfo(final Activity activity, final Button button,
+                                      final ProgressBar spinner, final String url, final JSONObject data) {
+        setupViews(activity, button, spinner);
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
                 data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
                 try {
                     if (!response.isNull("message")) {
                         Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
@@ -219,7 +223,10 @@ public class Utils {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
                 handleError(activity, error);
+
             }
         }) {
             @Override
