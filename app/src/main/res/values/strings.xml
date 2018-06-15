@@ -12,5 +12,8 @@
     <string name="exit_question">Выйти из приложения?</string>
     <string name="pass_question">Сдать ДЗ?</string>
     <string name="delete_homework_question">Удалить ДЗ?</string>
+    <string name="clear_schedule_question">Очистить расписание?</string>
+    <string name="clear_data_question">Вся информация о пользователе будет удалена(ДЗб расписание, личная информация). Продролжить?</string>
+    <string name="remove_account_question">Удалить аккаунт и все данные?</string>
 
 </resources>

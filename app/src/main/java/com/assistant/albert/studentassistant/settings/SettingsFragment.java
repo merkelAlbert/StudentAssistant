@@ -31,6 +31,9 @@ public class SettingsFragment extends Fragment {
     private Button exitButton;
     private Button changeScheduleButton;
     private Button changeInstantInfoButton;
+    private Button clearScheduleButton;
+    private Button clearDataButton;
+    private Button removeAccountButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -54,6 +57,9 @@ public class SettingsFragment extends Fragment {
         exitButton = view.findViewById(R.id.exitButton);
         changeScheduleButton = view.findViewById(R.id.changeScheduleButton);
         changeInstantInfoButton = view.findViewById(R.id.changeInstantInfoButton);
+        clearScheduleButton = view.findViewById(R.id.clearScheduleButton);
+        clearDataButton = view.findViewById(R.id.clearDataButton);
+        removeAccountButton = view.findViewById(R.id.removeAccountButton);
 
         changeScheduleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +82,70 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+
+        clearScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.clear_schedule_question);
+                builder.setPositiveButton("Очистить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ////очистка расписания
+                    }
+                });
+                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
+
+
+        clearDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.clear_data_question);
+                builder.setPositiveButton("Очистить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ////очистка данных
+                    }
+                });
+                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        removeAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.remove_account_question);
+                builder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ////удаление аккаунта
+                    }
+                });
+                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
