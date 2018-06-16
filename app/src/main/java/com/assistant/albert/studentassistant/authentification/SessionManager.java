@@ -47,8 +47,7 @@ public class SessionManager {
     }
 
     public void addSet(String key, ArrayList<String> list) {
-        Set<String> set = new HashSet<>();
-        set.addAll(list);
+        Set<String> set = new HashSet<>(list);
         editor.putStringSet(key, set);
         editor.commit();
     }
@@ -72,6 +71,7 @@ public class SessionManager {
     public ArrayList<String> getUserSubjects() {
         return new ArrayList<>(preferences.getStringSet(KEY_SUBJECTS, new HashSet<String>()));
     }
+
 
     public String getUserSchedule(){
         return preferences.getString(KEY_SCHEDULE,"");

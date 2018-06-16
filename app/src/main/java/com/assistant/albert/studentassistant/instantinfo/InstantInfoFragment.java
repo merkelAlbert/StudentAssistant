@@ -40,7 +40,7 @@ public class InstantInfoFragment extends Fragment {
     private TextView totalPassed;
 
 
-    private void fillInstantInfo(InstantInfoItem instantInfo){
+    private void fillInstantInfo(InstantInfoItem instantInfo) {
         String weekStr = "Текущая неделя: " + String.valueOf(instantInfo.CurrentWeek());
         String totalHomeworkStr = "Текущих ДЗ: " + String.valueOf(instantInfo.TotalHomework());
         String totalPassedStr = "Сдано ДЗ с начала учебы: " + String.valueOf(instantInfo.TotalPassed());
@@ -76,7 +76,7 @@ public class InstantInfoFragment extends Fragment {
                                         response.getInt("totalPassed")
                                 );
                                 session.add(SessionManager.KEY_INSTANT_INFO, response.toString());
-                               fillInstantInfo(instantInfo);
+                                fillInstantInfo(instantInfo);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

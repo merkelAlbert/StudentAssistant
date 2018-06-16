@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
@@ -30,6 +31,7 @@ public class NewInstantInfoActivity extends AppCompatActivity {
     private CalendarView startDate;
     private Button submit;
     private SessionManager session;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class NewInstantInfoActivity extends AppCompatActivity {
         group = findViewById(R.id.addGroup);
         startDate = findViewById(R.id.startDate);
         submit = findViewById(R.id.submitInstantInfo);
+        spinner = findViewById(R.id.progressBar);
+
+        spinner.setVisibility(View.GONE);
 
 
         InstantInfoItem instantInfo = new InstantInfoItem();
@@ -89,7 +94,7 @@ public class NewInstantInfoActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Utils.newInstantInfo(NewInstantInfoActivity.this, Urls.changeInstantInfo, jsonObject);
+                Utils.newInstantInfo(NewInstantInfoActivity.this, submit, spinner, Urls.changeInstantInfo, jsonObject);
             }
         });
     }
