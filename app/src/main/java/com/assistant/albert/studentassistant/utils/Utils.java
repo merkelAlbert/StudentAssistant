@@ -3,11 +3,7 @@ package com.assistant.albert.studentassistant.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,18 +23,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.assistant.albert.studentassistant.MainActivity;
 import com.assistant.albert.studentassistant.R;
-import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
-import com.assistant.albert.studentassistant.homework.HomeworkComparator;
 import com.assistant.albert.studentassistant.homework.HomeworkItem;
 import com.assistant.albert.studentassistant.homework.HomeworkRecyclerAdapter;
 import com.assistant.albert.studentassistant.instantinfo.InstantInfoItem;
 import com.assistant.albert.studentassistant.schedule.ClassSchedule;
 import com.assistant.albert.studentassistant.schedule.DaySchedule;
-import com.assistant.albert.studentassistant.schedule.ScheduleDays;
 import com.assistant.albert.studentassistant.schedule.ScheduleItem;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +38,6 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -158,12 +148,11 @@ public class Utils {
     }
 
 
-
     public static void deleteHomework(final Context context, final String url,
-                                    final JSONArray data, final ArrayList<HomeworkItem> all,
-                                    final ArrayList<HomeworkItem> deleted,
-                                    final boolean[] firstCardSelected,
-                                    final HomeworkRecyclerAdapter adapter) {
+                                      final JSONArray data, final ArrayList<HomeworkItem> all,
+                                      final ArrayList<HomeworkItem> deleted,
+                                      final boolean[] firstCardSelected,
+                                      final HomeworkRecyclerAdapter adapter) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url,
                 data, new Response.Listener<JSONArray>() {
@@ -201,7 +190,7 @@ public class Utils {
     }
 
 
-    public static void clear(final Activity activity, final String url){
+    public static void clear(final Activity activity, final SessionManager session, final ArrayList<String> keys, final String url) {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -211,6 +200,17 @@ public class Utils {
                         try {
                             if (!response.isNull("message")) {
                                 Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                                if (Integer.parseInt(response.get("status").toString()) == 200) {
+                                    if (keys.size() == 0) {
+                                        session.logoutUser();
+                                    } else
+                                        for (String key : keys) {
+                                            session.add(key, null);
+                                        }
+                                    Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    activity.startActivity(intent);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -227,7 +227,6 @@ public class Utils {
         );
         queue.add(jsonObjectRequest);
     }
-
 
 
     public static void newInstantInfo(final Activity activity, final Button button,
@@ -464,7 +463,6 @@ public class Utils {
         }
         return schedule;
     }
-
 
 
 }
