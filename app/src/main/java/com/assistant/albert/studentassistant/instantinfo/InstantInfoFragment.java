@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.assistant.albert.studentassistant.LessonBells;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
@@ -38,6 +40,7 @@ public class InstantInfoFragment extends Fragment {
     private TextView group;
     private TextView totalHomework;
     private TextView totalPassed;
+    private LinearLayout bellsWrap;
 
 
     private void fillInstantInfo(InstantInfoItem instantInfo) {
@@ -117,7 +120,12 @@ public class InstantInfoFragment extends Fragment {
         group = view.findViewById(R.id.group);
         totalHomework = view.findViewById(R.id.totalHomework);
         totalPassed = view.findViewById(R.id.totalPassed);
-
+        bellsWrap = view.findViewById(R.id.bellsWrap);
+        for (int i = 0; i < LessonBells.Bells.size(); i++) {
+            TextView bellTextView = (TextView) getLayoutInflater().inflate(R.layout.content_instant_info_bell, bellsWrap, false);
+            bellTextView.setText(String.valueOf(i + 1) + ". " + LessonBells.Bells.get(i));
+            bellsWrap.addView(bellTextView);
+        }
 
         swipeRefreshLayout = view.findViewById(R.id.instantInfoContainer);
 

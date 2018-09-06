@@ -1,14 +1,13 @@
 package com.assistant.albert.studentassistant.instantinfo;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.Urls;

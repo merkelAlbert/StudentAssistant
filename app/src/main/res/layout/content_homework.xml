@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/homeworkCard"
+    style="@style/CardStyle">
+
+    <android.support.constraint.ConstraintLayout
+        style="@style/HomeworkContainerStyle"
+        android:background="@drawable/card_border"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/subject"
+            style="@style/CardSubjectStyle" />
+
+        <TextView
+            android:id="@+id/exercise"
+            style="@style/CardTextStyle"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@id/subject"
+            app:layout_constraintTop_toBottomOf="@id/subject" />
+
+
+        <TextView
+            android:id="@+id/remainedDays"
+            style="@style/CardTimeStyle"
+            android:background="@drawable/card_time_circle"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

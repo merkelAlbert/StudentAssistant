@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.assistant.albert.studentassistant.MainActivity;
 import com.assistant.albert.studentassistant.R;
-
 import com.assistant.albert.studentassistant.Urls;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
 import com.assistant.albert.studentassistant.instantinfo.NewInstantInfoActivity;
@@ -23,6 +21,7 @@ import com.assistant.albert.studentassistant.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -93,12 +92,10 @@ public class SettingsFragment extends Fragment {
                 builder.setPositiveButton("Очистить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Utils.clear(getActivity(), Urls.clearSchedule + userId);
-                        session.add(SessionManager.KEY_SCHEDULE, null);
-                        session.add(SessionManager.KEY_SUBJECTS, null);
-                        Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        ArrayList<String> keys = new ArrayList<>();
+                        keys.add(SessionManager.KEY_SCHEDULE);
+                        keys.add(SessionManager.KEY_SUBJECTS);
+                        Utils.clear(getActivity(), session, keys, Urls.clearSchedule + userId);
                     }
                 });
                 builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -120,13 +117,11 @@ public class SettingsFragment extends Fragment {
                 builder.setPositiveButton("Очистить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Utils.clear(getActivity(), Urls.clearData + userId);
-                        session.add(SessionManager.KEY_SCHEDULE, null);
-                        session.add(SessionManager.KEY_SUBJECTS, null);
-                        session.add(SessionManager.KEY_INSTANT_INFO, null);
-                        Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        ArrayList<String> keys = new ArrayList<>();
+                        keys.add(SessionManager.KEY_SCHEDULE);
+                        keys.add(SessionManager.KEY_SUBJECTS);
+                        keys.add(SessionManager.KEY_INSTANT_INFO);
+                        Utils.clear(getActivity(), session, keys, Urls.clearData + userId);
                     }
                 });
                 builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -147,11 +142,8 @@ public class SettingsFragment extends Fragment {
                 builder.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Utils.clear(getActivity(), Urls.removeAccount + userId);
-                        session.logoutUser();
-                        Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        ArrayList<String> keys = new ArrayList<>();
+                        Utils.clear(getActivity(), session, keys, Urls.removeAccount + userId);
                     }
                 });
                 builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
