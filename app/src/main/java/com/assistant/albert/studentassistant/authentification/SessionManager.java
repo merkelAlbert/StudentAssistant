@@ -22,6 +22,7 @@ public class SessionManager {
     public static final String KEY_SUBJECTS = "Subjects";
     public static final String KEY_SCHEDULE = "Schedule";
     public static final String KEY_INSTANT_INFO = "InstantInfo";
+    public static final String KEY_CURRENT_DAY = "CurrentDay";
 
     public SessionManager(Context context) {
         this.context = context;
@@ -38,11 +39,17 @@ public class SessionManager {
         editor.putString(KEY_SUBJECTS, null);
         editor.putString(KEY_SCHEDULE, null);
         editor.putString(KEY_INSTANT_INFO, null);
+        editor.putInt(KEY_CURRENT_DAY, 0);
         editor.commit();
     }
 
     public void add(String key, String value) {
         editor.putString(key, value);
+        editor.commit();
+    }
+
+    public void addInt(String key, Integer value) {
+        editor.putInt(key, value);
         editor.commit();
     }
 
@@ -52,6 +59,10 @@ public class SessionManager {
         editor.commit();
     }
 
+
+    public Integer getCurrentDay() {
+        return preferences.getInt(KEY_CURRENT_DAY, 0);
+    }
 
     public boolean isLoggedIn() {
         return preferences.getBoolean(IS_LOGIN, false);
