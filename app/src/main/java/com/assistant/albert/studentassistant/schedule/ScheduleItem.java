@@ -19,6 +19,7 @@ public class ScheduleItem {
     private String id;
     private String userId;
     private ArrayList<ArrayList<ArrayList<String>>> schedule;
+    private Integer currentDay;
 
     public ScheduleItem() {
         this.schedule = new ArrayList<>();
@@ -32,12 +33,19 @@ public class ScheduleItem {
         return userId;
     }
 
+    public Integer CurrentDay() {
+        return currentDay;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void SetCurrentDay(Integer day) {
+        this.currentDay = day;
     }
 
     public ArrayList<ArrayList<ArrayList<String>>> Schedule() {

@@ -71,10 +71,12 @@ public class ScheduleFragment extends Fragment {
                                         }).show();
                             } else if (Integer.parseInt(response.getString("status")) == 200) {
                                 JSONArray subjects = response.getJSONArray("subjects");
+                                Integer currentDay = response.getInt("currentDay");
                                 for (int i = 0; i < subjects.length(); i++) {
                                     subjectsList.add(subjects.getString(i));
                                 }
                                 scheduleItem = Utils.getScheduleFromJson(response.getJSONObject("schedule"));
+                                scheduleItem.SetCurrentDay(currentDay);
                                 session.add(SessionManager.KEY_SCHEDULE, response.getJSONObject("schedule").toString());
                             }
                         } catch (JSONException e) {

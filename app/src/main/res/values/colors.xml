@@ -13,4 +13,5 @@
     <color name="card_time_circle_border_color">#757575</color>
     <color name="container_background">#eee</color>
     <color name="orange">#ff7043</color>
+    <color name="currentDay">#1b8c9bef</color>
 </resources>
