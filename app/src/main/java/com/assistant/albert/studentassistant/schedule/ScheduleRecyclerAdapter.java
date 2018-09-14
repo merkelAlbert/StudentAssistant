@@ -66,10 +66,8 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
 
                 if (currentWeek % 2 != 0) {
                     numeratorSubject.setTypeface(null, Typeface.BOLD);
-                    numeratorSubject.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 } else {
                     denominatorSubject.setTypeface(null, Typeface.BOLD);
-                    denominatorSubject.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 }
 
                 if (dataSet.CurrentDay() == position)
@@ -99,7 +97,6 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
                     numeratorSubject.setText(numeratorString);
                     if (currentWeek % 2 == 0) {
                         numeratorSubject.setTypeface(null, Typeface.BOLD);
-                        numeratorSubject.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                     }
                 }
 
