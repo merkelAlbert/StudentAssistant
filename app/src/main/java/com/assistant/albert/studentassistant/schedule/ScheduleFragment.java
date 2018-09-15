@@ -155,7 +155,7 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onRefresh() {
                 scheduleSwipeRefreshLayout.setRefreshing(true);
-                scheduleItem.Schedule().clear();
+                scheduleItem = null;
                 getSchedule(userId, Urls.schedule);
 
                 scheduleSwipeRefreshLayout.post(new Runnable() {
