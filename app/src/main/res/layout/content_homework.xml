@@ -13,20 +13,29 @@
 
         <TextView
             android:id="@+id/subject"
-            style="@style/CardSubjectStyle" />
+            style="@style/CardSubjectStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/remainedDays" />
 
         <TextView
             android:id="@+id/exercise"
             style="@style/CardTextStyle"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@id/subject"
-            app:layout_constraintTop_toBottomOf="@id/subject" />
+            app:layout_constraintBaseline_toBaselineOf="@id/week" />
 
 
         <TextView
             android:id="@+id/remainedDays"
             style="@style/CardTimeStyle"
             android:background="@drawable/card_time_circle"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/week"
+            style="@style/CardWeekStyle"
+            android:text="7 нед"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
