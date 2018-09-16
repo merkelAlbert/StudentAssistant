@@ -33,7 +33,6 @@
         <TextView
             android:id="@+id/week"
             style="@style/CardWeekStyle"
-            android:text="7 нед"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

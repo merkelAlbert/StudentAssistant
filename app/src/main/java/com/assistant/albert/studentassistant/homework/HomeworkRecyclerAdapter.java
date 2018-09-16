@@ -116,7 +116,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
                                     editHomework.putExtra("id", holder.id);
                                     editHomework.putExtra("subject", holder.subject.getText());
                                     editHomework.putExtra("exercise", holder.exercise.getText());
-                                    editHomework.putExtra("week", holder.week);
+                                    editHomework.putExtra("week", holder.weekValue);
                                     editHomework.putExtra("editing", true);
                                     view.getContext().startActivity(editHomework);
                                     break;
@@ -231,7 +231,9 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         holder.remainedDays.setText(String.valueOf(dataSet.get(position).RemainedDays()));
         holder.exercise.setText(dataSet.get(position).Exercise());
         holder.subject.setText(dataSet.get(position).Subject());
-        holder.week = dataSet.get(position).Week();
+        holder.weekTextView.setText(dataSet.get(position).Week() + " нед");
+
+        holder.weekValue = dataSet.get(position).Week();
         setColor(view, holder, Integer.parseInt(holder.remainedDays.getText().toString()));
         handleClick(view, holder, holder.cardView.getCardBackgroundColor().getDefaultColor(), position);
         holder.cardView.setCardBackgroundColor(view.getResources().getColor(R.color.white));
@@ -253,8 +255,9 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
         TextView subject;
         TextView exercise;
         TextView remainedDays;
+        TextView weekTextView;
         String id;
-        int week;
+        int weekValue;
         boolean selected;
 
 
@@ -264,6 +267,7 @@ public class HomeworkRecyclerAdapter extends RecyclerView.Adapter<HomeworkRecycl
             subject = itemView.findViewById(R.id.subject);
             exercise = itemView.findViewById(R.id.exercise);
             remainedDays = itemView.findViewById(R.id.remainedDays);
+            weekTextView = itemView.findViewById(R.id.week);
             selected = false;
         }
     }
