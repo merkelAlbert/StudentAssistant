@@ -78,6 +78,7 @@ public class ScheduleFragment extends Fragment {
                                 scheduleItem = Utils.getScheduleFromJson(response.getJSONObject("schedule"));
                                 scheduleItem.SetCurrentDay(currentDay);
                                 session.add(SessionManager.KEY_SCHEDULE, response.getJSONObject("schedule").toString());
+                                session.add(SessionManager.KEY_TEACHERS, response.getJSONObject("teachers").toString());
                                 session.addInt(SessionManager.KEY_CURRENT_DAY, currentDay);
                             }
                         } catch (JSONException e) {

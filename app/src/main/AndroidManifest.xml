@@ -31,6 +31,7 @@
         <activity android:name=".authentification.RegistrationActivity" />
         <activity android:name=".schedule.NewScheduleActivity"></activity>
         <activity android:name=".instantinfo.NewInstantInfoActivity"></activity>
+        <activity android:name=".teachers.TeachersActivity"></activity>
     </application>
 
 </manifest>

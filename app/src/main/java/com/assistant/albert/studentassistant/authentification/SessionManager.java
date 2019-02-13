@@ -20,6 +20,7 @@ public class SessionManager {
     public static final String KEY_EMAIL = "Email";
     public static final String KEY_USER_ID = "UserId";
     public static final String KEY_SUBJECTS = "Subjects";
+    public static final String KEY_TEACHERS = "Teachers";
     public static final String KEY_SCHEDULE = "Schedule";
     public static final String KEY_INSTANT_INFO = "InstantInfo";
     public static final String KEY_CURRENT_DAY = "CurrentDay";
@@ -37,6 +38,7 @@ public class SessionManager {
         editor.putString(KEY_USER_ID, userId);
 
         editor.putString(KEY_SUBJECTS, null);
+        editor.putString(KEY_TEACHERS, null);
         editor.putString(KEY_SCHEDULE, null);
         editor.putString(KEY_INSTANT_INFO, null);
         editor.putInt(KEY_CURRENT_DAY, 0);
@@ -83,6 +85,9 @@ public class SessionManager {
         return new ArrayList<>(preferences.getStringSet(KEY_SUBJECTS, new HashSet<String>()));
     }
 
+    public String getUserTeachers() {
+        return preferences.getString(KEY_TEACHERS, "");
+    }
 
     public String getUserSchedule(){
         return preferences.getString(KEY_SCHEDULE,"");

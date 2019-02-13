@@ -30,6 +30,7 @@ import com.assistant.albert.studentassistant.instantinfo.InstantInfoItem;
 import com.assistant.albert.studentassistant.schedule.ClassSchedule;
 import com.assistant.albert.studentassistant.schedule.DaySchedule;
 import com.assistant.albert.studentassistant.schedule.ScheduleItem;
+import com.assistant.albert.studentassistant.teachers.TeachersItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Utils {
@@ -65,6 +67,48 @@ public class Utils {
 
 
     public static void newSchedule(final Activity activity, final Button button,
+                                   final ProgressBar spinner, final String url, final JSONObject data) {
+        setupViews(activity, button, spinner);
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+                data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
+                try {
+                    if (!response.isNull("message")) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+                    if (Integer.parseInt(response.get("status").toString()) == 200) {
+                        Toast.makeText(activity.getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(activity.getApplicationContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(i);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                button.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.GONE);
+                handleError(activity, error);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
+    public static void newTeachers(final Activity activity, final Button button,
                                    final ProgressBar spinner, final String url, final JSONObject data) {
         setupViews(activity, button, spinner);
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
@@ -419,6 +463,29 @@ public class Utils {
         button.setVisibility(View.GONE);
     }
 
+    public static TeachersItem getTeachersFromJson(JSONObject jsonObject) {
+        TeachersItem teachersItem = new TeachersItem();
+
+        try {
+//            JSONObject teachersJson = jsonObject.getJSONObject("teachers");
+            JSONArray teachersArray = jsonObject.getJSONArray("teachers");
+            JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+            List<String> teachers = new ArrayList<>();
+            List<String> subjects = new ArrayList<>();
+            for (int i = 0; i < subjectsArray.length(); i++) {
+                teachers.add(teachersArray.getString(i));
+                subjects.add(subjectsArray.getString(i));
+            }
+            teachersItem = new TeachersItem(
+                    jsonObject.getString("id"),
+                    subjects,
+                    teachers);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return teachersItem;
+    }
+
     public static InstantInfoItem getInstantInfoItemFromJson(JSONObject jsonObject) {
         InstantInfoItem instantInfo = new InstantInfoItem();
 
@@ -463,6 +530,5 @@ public class Utils {
         }
         return schedule;
     }
-
 
 }

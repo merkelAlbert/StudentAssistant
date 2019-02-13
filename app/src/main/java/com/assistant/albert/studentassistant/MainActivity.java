@@ -11,8 +11,7 @@ import com.assistant.albert.studentassistant.homework.HomeworkFragment;
 import com.assistant.albert.studentassistant.schedule.ScheduleFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements HomeworkFragment.OnFragmentInteractionListener,
-        ScheduleFragment.OnFragmentInteractionListener {
+        implements HomeworkFragment.OnFragmentInteractionListener, ScheduleFragment.OnFragmentInteractionListener {
 
 
     @Override
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity
         final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.setOffscreenPageLimit(tabLayout.getTabCount()-1);
+        viewPager.setOffscreenPageLimit(tabLayout.getTabCount() - 1);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

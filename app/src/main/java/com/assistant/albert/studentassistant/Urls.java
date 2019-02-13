@@ -17,4 +17,5 @@ public class Urls {
     public static String clearSchedule = root + "clearSchedule/";
     public static String clearData = root + "clearData/";
     public static String removeAccount = root + "removeAccount/";
+    public static String changeTeachers = root + "changeTeachers/";
 }

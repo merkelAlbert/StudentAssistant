@@ -16,6 +16,7 @@ import com.assistant.albert.studentassistant.authentification.SessionManager;
 import com.assistant.albert.studentassistant.instantinfo.NewInstantInfoActivity;
 import com.assistant.albert.studentassistant.schedule.NewScheduleActivity;
 import com.assistant.albert.studentassistant.schedule.ScheduleItem;
+import com.assistant.albert.studentassistant.teachers.TeachersActivity;
 import com.assistant.albert.studentassistant.utils.Utils;
 
 import org.json.JSONException;
@@ -32,6 +33,7 @@ public class SettingsFragment extends Fragment {
     private Button exitButton;
     private Button changeScheduleButton;
     private Button changeInstantInfoButton;
+    private Button changeTeachersButton;
     private Button clearScheduleButton;
     private Button clearDataButton;
     private Button removeAccountButton;
@@ -57,6 +59,7 @@ public class SettingsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         exitButton = view.findViewById(R.id.exitButton);
         changeScheduleButton = view.findViewById(R.id.changeScheduleButton);
+        changeTeachersButton = view.findViewById(R.id.changeTeachersButton);
         changeInstantInfoButton = view.findViewById(R.id.changeInstantInfoButton);
         clearScheduleButton = view.findViewById(R.id.clearScheduleButton);
         clearDataButton = view.findViewById(R.id.clearDataButton);
@@ -71,6 +74,14 @@ public class SettingsFragment extends Fragment {
                     i.putExtra("id", finalSchedule.Id());
                 } else
                     i.putExtra("isEditing", false);
+                startActivity(i);
+            }
+        });
+
+        changeTeachersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), TeachersActivity.class);
                 startActivity(i);
             }
         });

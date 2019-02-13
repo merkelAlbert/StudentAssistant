@@ -3,15 +3,16 @@ package com.assistant.albert.studentassistant.schedule;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.assistant.albert.studentassistant.LessonBells;
 import com.assistant.albert.studentassistant.R;
 import com.assistant.albert.studentassistant.authentification.SessionManager;
+import com.assistant.albert.studentassistant.teachers.TeachersItem;
 import com.assistant.albert.studentassistant.utils.Utils;
 
 import org.json.JSONException;
@@ -46,11 +47,14 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
             SessionManager sessionManager = new SessionManager(scheduleCardView.getContext());
 
             Integer currentWeek = 0;
+            TeachersItem teachersItem = new TeachersItem();
             try {
                 currentWeek = Utils.getInstantInfoItemFromJson(new JSONObject(sessionManager.getInstantInfo())).CurrentWeek();
+                teachersItem = Utils.getTeachersFromJson(new JSONObject(sessionManager.getUserTeachers()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
 
             for (int i = 0; i < daySchedule.size(); i++) {
 
@@ -61,13 +65,21 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
 
                 TextView subjectNumber = subjectCardView.findViewById(R.id.subjectNumber);
                 TextView numeratorSubject = subjectCardView.findViewById(R.id.numeratorSubject);
-                TextView denominatorSubject = subjectCardView.findViewById(R.id.denomenatorSubject);
+                TextView denominatorSubject = subjectCardView.findViewById(R.id.denominatorSubject);
                 TextView subjectDivider = subjectCardView.findViewById(R.id.subjectDivider);
+                TextView numeratorTeacher = subjectCardView.findViewById(R.id.numeratorTeacher);
+                TextView denominatorTeacher = subjectCardView.findViewById(R.id.denominatorTeacher);
+                TextView time = subjectCardView.findViewById(R.id.time);
+
+                time.setText(LessonBells.Bells.get(i));
+                time.setTypeface(null, Typeface.BOLD);
 
                 if (currentWeek % 2 != 0) {
                     numeratorSubject.setTypeface(null, Typeface.BOLD);
+                    numeratorTeacher.setTypeface(null, Typeface.BOLD);
                 } else {
                     denominatorSubject.setTypeface(null, Typeface.BOLD);
+                    denominatorTeacher.setTypeface(null, Typeface.BOLD);
                 }
 
                 if (dataSet.CurrentDay() == position)
@@ -83,20 +95,53 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
                     denominatorSubject.setText(denominatorString);
                     subjectDivider.setText("|");
 
+                    int numeratorIndex = teachersItem.Subjects().indexOf(numeratorSubject.getText().toString());
+                    int denominatorIndex = teachersItem.Subjects().indexOf(denominatorSubject.getText().toString());
+                    if (numeratorIndex != -1)
+                        numeratorTeacher.setText(teachersItem.Teachers().get(numeratorIndex));
+                    else
+                        numeratorTeacher.setText("-");
+
+                    if (denominatorIndex != -1)
+                        denominatorTeacher.setText(teachersItem.Teachers().get(denominatorIndex));
+                    else
+                        denominatorTeacher.setText("-");
+
+
                 } else if (numeratorString.isEmpty() && !denominatorString.isEmpty()) {
                     numeratorSubject.setText("-");
                     subjectDivider.setText("|");
                     denominatorSubject.setText(denominatorString);
+
+                    int denominatorIndex = teachersItem.Subjects().indexOf(denominatorSubject.getText().toString());
+                    if (denominatorIndex != -1)
+                        denominatorTeacher.setText(teachersItem.Teachers().get(denominatorIndex));
+                    else
+                        denominatorTeacher.setText("-");
+                    numeratorTeacher.setText("-");
 
                 } else if (!numeratorString.isEmpty() && denominatorString.isEmpty()) {
                     numeratorSubject.setText(numeratorString);
                     denominatorSubject.setText("-");
                     subjectDivider.setText("|");
 
+                    int numeratorIndex = teachersItem.Subjects().indexOf(numeratorSubject.getText().toString());
+                    if (numeratorIndex != -1)
+                        numeratorTeacher.setText(teachersItem.Teachers().get(numeratorIndex));
+                    else
+                        numeratorTeacher.setText("-");
+                    denominatorTeacher.setText("-");
+
                 } else if ((numeratorString.equals(denominatorString)) && (!numeratorString.isEmpty())) {
                     numeratorSubject.setText(numeratorString);
+                    int numeratorIndex = teachersItem.Subjects().indexOf(numeratorSubject.getText().toString());
+                    if (numeratorIndex != -1)
+                        numeratorTeacher.setText(teachersItem.Teachers().get(numeratorIndex));
+                    else
+                        numeratorTeacher.setText("-");
                     if (currentWeek % 2 == 0) {
                         numeratorSubject.setTypeface(null, Typeface.BOLD);
+                        numeratorTeacher.setTypeface(null, Typeface.BOLD);
                     }
                 }
 
