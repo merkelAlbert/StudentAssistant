@@ -39,6 +39,7 @@ public class ScheduleRecyclerAdapter extends RecyclerView.Adapter<ScheduleRecycl
 
     @Override
     public void onBindViewHolder(ScheduleRecyclerAdapter.ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         if (holder.scheduleOfDay.getChildCount() == 0) {
             holder.weekDay.setText(ScheduleDays.list.get(position).toString());
             ArrayList daySchedule = dataSet.Schedule().get(position);
