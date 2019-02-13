@@ -11,7 +11,7 @@ public class Urls {
     public static String login = root + "login/";
     public static String addSchedule = root + "addSchedule/";
     public static String instantInfo = root + "userInfo/";
-    public static String changeSchedule = root + "changeSchedule/";
+    public static String changeSchedule = root + "schedule/";
     public static String changeInstantInfo = root + "changeUser/";
     public static String deleteHomework = root + "deleteHomework/";
     public static String clearSchedule = root + "clearSchedule/";
